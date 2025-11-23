@@ -15,6 +15,7 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "bootstrap": "^5.3.8",
     "vue": "^3.5.22"
   },
   "devDependencies": {
