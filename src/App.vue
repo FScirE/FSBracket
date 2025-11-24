@@ -1,15 +1,22 @@
 <script setup lang="ts">
 import Sidebar from './components/Sidebar.vue';
+import Topbar from './components/Topbar.vue';
 import MainArea from './components/MainArea.vue'
+import { onMounted } from 'vue';
+
+onMounted(() => {
+  const theme = localStorage.getItem('theme')
+  if (!theme) {
+    localStorage.setItem('theme', 'dark')
+    location.reload()
+  }
+})
 </script>
 
 <template>
 <div id="container">
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="50" height="50" />
-    <h1>
-      FSBracket
-    </h1>
+    <Topbar />
   </header>
 
   <main>
@@ -26,22 +33,18 @@ import MainArea from './components/MainArea.vue'
   height: 100vh;
   left: 0;
   top: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-  padding: 1.5rem;
-  line-height: 1.5;
-  width: 100vw;
-  background-color: var(--color-background-mute);
+  width: 100%;
 }
 
 main {
   display: flex;
-  justify-content: stretch;
+  width: 100%;
+  flex: 1;
 }
 
 </style>
