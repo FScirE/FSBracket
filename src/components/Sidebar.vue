@@ -16,6 +16,4 @@
   box-shadow: 0 0 8px var(--color-border);
   clip-path: inset(0 -10px 0 0);
 }
-
-
 </style>

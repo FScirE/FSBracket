@@ -3,7 +3,6 @@
   --vt-c-white: #ffffff;
   --vt-c-white-soft: #f8f8f8;
   --vt-c-white-mute: #f2f2f2;
-  --vt-c-white-dark: #e0e0e0;
 
   --vt-c-black: #181818;
   --vt-c-black-soft: #222222;
@@ -21,8 +20,9 @@
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: rgba(240, 240, 240, 0.7);
 
-  --primary-purple: #672CD3;
-  --secondary-purple: #8556DC;
+  --purple: #672CD3;
+  --purple-light: #8556DC;
+  --white-dark: #e0e0e0;
 }
 
 /* semantic color variables for this project */
@@ -36,6 +36,8 @@ html[data-theme="light"] {
 
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-light-1);
+
+  --purple-primary: var(--purple-light)
 }
 html[data-theme="dark"] {
   --color-background: var(--vt-c-black);
@@ -47,6 +49,8 @@ html[data-theme="dark"] {
 
   --color-heading: var(--vt-c-text-dark-1);
   --color-text: var(--vt-c-text-dark-2);
+
+  --purple-primary: var(--purple)
 }
 
 *,
@@ -84,12 +88,12 @@ body {
 }
 
 html[data-theme="light"] .btn {
-  background-color: var(--secondary-purple) !important;
+  background-color: var(--purple-primary) !important;
   color: var(--vt-c-white-mute);
   border: none;
 }
 html[data-theme="dark"] .btn {
-  background-color: var(--primary-purple) !important;
-  color: var(--vt-c-white-dark);
+  background-color: var(--purple-primary) !important;
+  color: var(--white-dark);
   border: none;
 }
