@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { teamList } from '@/assets/global';
 import TeamCardC from './TeamCardC.vue';
+import TeamModalC from './TeamModalC.vue';
 </script>
 
 <template>
@@ -19,10 +20,11 @@ import TeamCardC from './TeamCardC.vue';
       </div>
     </div>
     <div class="bottom-section my-3">
-      <button class="btn p-2 mt-4" type="button">
+      <button class="btn btn-primary p-2 mt-4" type="button" data-bs-toggle="modal" data-bs-target="#team-modal">
         <span class="me-2">New</span>
         <i class="pi pi-plus"></i>
       </button>
+      <TeamModalC />
     </div>
   </div>
 </div>
@@ -36,11 +38,13 @@ import TeamCardC from './TeamCardC.vue';
   width: 340px;
   height: 100%;
   background-color: var(--color-background-soft);
-  box-shadow: -1px 0 9px var(--color-shadow);
-  clip-path: inset(0 -10px 0 0);
 }
 .sidebar h2 {
   border-bottom: 1px solid var(--color-border-hover);
+}
+#collapse-sidebar {
+  box-shadow: -1px 0 9px var(--color-shadow);
+  clip-path: inset(0 -10px 0 0);
 }
 
 .team-list {

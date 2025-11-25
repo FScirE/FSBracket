@@ -81,6 +81,7 @@ function handleZoomArea(event: WheelEvent) {
       v-for="(match, index) in matchList"
       :key="index"
       :match="match"
+      :scale="scale"
     />
   </div>
 </div>

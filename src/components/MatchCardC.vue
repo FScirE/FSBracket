@@ -4,7 +4,8 @@ import type { Match } from '@/assets/global';
 import TeamCardC from './TeamCardC.vue';
 
 const props = defineProps<{
-  match: Match
+  match: Match,
+  scale: number
 }>()
 
 const isDragging = ref(false)
@@ -19,41 +20,58 @@ const STICK_RANGE = 12 // threshold for snapping in px
 function startDragCard(event: MouseEvent) {
   event.stopPropagation() // hinder area drag
   isDragging.value = true
-  dragStartX.value = event.clientX - posX.value
-  dragStartY.value = event.clientY - posY.value
+
+  const canvas = cardRef.value?.parentElement
+  if (!canvas)
+    return
+  const canvasRect = canvas.getBoundingClientRect()
+
+  // pointer position in local coordinates
+  const pointerLocalX = (event.clientX - canvasRect.left) / props.scale
+  const pointerLocalY = (event.clientY - canvasRect.top) / props.scale
+
+  dragStartX.value = pointerLocalX - posX.value
+  dragStartY.value = pointerLocalY - posY.value
+
   if (cardRef.value !== null)
     cardRef.value!.style.zIndex = "11";
 }
 
 function handleMouseMove(event: MouseEvent) {
-  if (isDragging.value) {
-    let tempX = event.clientX - dragStartX.value
-    let tempY = event.clientY - dragStartY.value
+  if (!isDragging.value)
+    return
 
-    // snap to other cards if close in either x- or y-axis
-    const canvas = cardRef.value!.parentElement
-    if (canvas) {
-      const canvasRect = canvas.getBoundingClientRect()
+  const canvas = cardRef.value!.parentElement
+  if (!canvas)
+    return
+  const canvasRect = canvas.getBoundingClientRect()
 
-      const others = canvas.querySelectorAll('.match-card')
-      others.forEach(e => {
-        if (e === cardRef.value)
-          return
+  // pointer in local coordinates
+  const pointerLocalX = (event.clientX - canvasRect.left) / props.scale
+  const pointerLocalY = (event.clientY - canvasRect.top) / props.scale
 
-        const r = e.getBoundingClientRect()
-        const otherX = r.left - canvasRect.left
-        const otherY = r.top - canvasRect.top
+  let tempX = pointerLocalX - dragStartX.value
+  let tempY = pointerLocalY - dragStartY.value
 
-        if (Math.abs(tempX - otherX) <= STICK_RANGE)
-          tempX = otherX
-        if (Math.abs(tempY - otherY) <= STICK_RANGE)
-          tempY = otherY
-      })
-    }
+  // snap to other cards within range in x- or y-axis
+  const others = canvas.querySelectorAll('.match-card')
+  others.forEach(e => {
+    if (e === cardRef.value)
+      return
 
-    posX.value = tempX
-    posY.value = tempY
-  }
+    const r = e.getBoundingClientRect()
+    const otherX = (r.left - canvasRect.left) / props.scale
+    const otherY = (r.top - canvasRect.top) / props.scale
+
+    // snapping range is 12px on screen, not local
+    if (Math.abs(tempX - otherX) <= STICK_RANGE / props.scale)
+      tempX = otherX
+    if (Math.abs(tempY - otherY) <= STICK_RANGE / props.scale)
+      tempY = otherY
+  })
+
+  posX.value = tempX
+  posY.value = tempY
 }
 
 function stopDragCard() {

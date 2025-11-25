@@ -2,7 +2,8 @@ import { ref } from 'vue'
 
 export type Team = {
   name: string,
-  imageUrl: string
+  imageUrl: string,
+  color: string
 }
 
 export type Match = {
@@ -19,19 +20,23 @@ export type Match = {
 export const teamList = ref<Team[]>([
   {
     name: "Liquid",
-    imageUrl: ""
+    imageUrl: "",
+    color: "#13d4f1"
   },
   {
     name: "Fnatic",
-    imageUrl: ""
+    imageUrl: "",
+    color: ""
   },
   {
     name: "NTMR",
-    imageUrl: ""
+    imageUrl: "",
+    color: "bleh"
   },
   {
     name: "M80",
-    imageUrl: ""
+    imageUrl: "",
+    color: ""
   }
 ])
 export const matchList = ref<Match[]>([

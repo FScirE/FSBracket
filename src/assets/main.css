@@ -96,13 +96,35 @@ body {
   scrollbar-color: var(--color-border-hover) transparent;
 }
 
-html[data-theme="light"] .btn {
-  background-color: var(--purple-primary) !important;
-  color: var(--vt-c-white-mute);
+/* override bootstrap button colors */
+.btn {
   border: none;
 }
-html[data-theme="dark"] .btn {
+html[data-theme="light"] .btn-primary {
+  background-color: var(--purple-primary) !important;
+  color: var(--vt-c-white-mute);
+}
+html[data-theme="dark"] .btn-primary {
   background-color: var(--purple-primary) !important;
   color: var(--white-dark);
+}
+.btn-secondary {
+  background-color: var(--color-border);
+  color: var(--color-text);
+}
+
+/* override bootstrap modal colors */
+.modal-content {
+  background-color: var(--color-background-soft);
+  color: var(--color-text);
   border: none;
+}
+.modal-header {
+  border-bottom-color: var(--color-border);
+}
+.modal-footer {
+  border-top-color: var(--color-border);
+}
+html[data-theme="dark"] .btn-close {
+  filter: invert(1) grayscale(100%);
 }

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import type { Team } from '@/assets/global';
 
 const props = withDefaults(defineProps<{
@@ -7,6 +8,27 @@ const props = withDefaults(defineProps<{
 }>(), {
   score: null
 })
+
+const textColor = computed(() => {
+  if (props.team.color.startsWith("#")) {
+    // get r, g, and b values
+    let hex = props.team.color.slice(1)
+    if (hex.length === 3) {
+      const r = parseInt(hex[0]! + hex[0], 16)
+      const g = parseInt(hex[1]! + hex[1], 16)
+      const b = parseInt(hex[2]! + hex[2], 16)
+    }
+    if (hex.length !== 6)
+      return null
+    const r = parseInt(hex.slice(0, 2), 16)
+    const g = parseInt(hex.slice(2, 4), 16)
+    const b = parseInt(hex.slice(4, 6), 16)
+    // luminance to determine if white or black text
+    const lum = (r * 299 + g * 587 + b * 114) / 1000
+    return lum >= 150 ? 'var(--vt-c-indigo)' : 'var(--vt-c-white-dark)'
+  }
+  return null
+})
 </script>
 
 <template>
@@ -14,7 +36,10 @@ const props = withDefaults(defineProps<{
   <div class="team-image">
     <img :src="team.imageUrl" :alt="team.name"></img>
   </div>
-  <div class="team-name ps-2">
+  <div
+    class="team-name ps-2"
+    :style="{ backgroundColor: team.color, color: (textColor ? textColor : '') }"
+  >
     <h5>{{ team.name }}</h5>
   </div>
   <div class="team-score" v-if="score !== null">
@@ -63,6 +88,7 @@ const props = withDefaults(defineProps<{
   justify-content: center;
   height: 100%;
   width: 2.1rem;
+  margin-left: 1px;
   background-color: var(--purple-primary);
   color: var(--white-dark);
 }

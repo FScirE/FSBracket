@@ -24,7 +24,7 @@ function toggleTheme() {
 <template>
 <div class="topbar">
   <div>
-    <button class="collapse-button btn ms-4" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-sidebar" aria-expanded="true" aria-controls="collapse-sidebar">
+    <button class="collapse-button btn btn-primary ms-4" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-sidebar" aria-expanded="true" aria-controls="collapse-sidebar">
       <span class="visually-hidden">Open sidebar</span>
       <i class="pi pi-chevron-left fs-4 p-1"></i>
     </button>
@@ -36,7 +36,7 @@ function toggleTheme() {
     </h1>
   </div>
   <div>
-    <button class="btn me-4" type="button" @click="toggleTheme()">
+    <button class="btn btn-primary me-4" type="button" @click="toggleTheme()">
       <span class="visually-hidden">Toggle theme</span>
       <i class="pi fs-4 p-1" :class="(theme === 'dark') ? 'pi-moon' : 'pi-sun'"></i>
     </button>
