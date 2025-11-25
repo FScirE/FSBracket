@@ -52,9 +52,9 @@ function toggleTheme() {
   gap: 2rem;
   padding: 1.5rem;
   line-height: 1.5;
-  background-color: var(--color-background-mute);
   width: 100%;
-  box-shadow: 0 0 8px inset var(--color-border);
+  background-color: var(--color-background-mute);
+  box-shadow: 0 -5px 8px -6px inset var(--color-border);
 }
 
 button {

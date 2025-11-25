@@ -9,6 +9,9 @@ const dragStartX = ref(0)
 const dragStartY = ref(0)
 const offsetX = ref(0)
 const offsetY = ref(0)
+const scale = ref(1)
+
+const ZOOM_SENS = 1.10
 
 function startDragArea(event: MouseEvent) {
   isDraggingArea.value = true
@@ -26,6 +29,38 @@ function handleMouseMove(event: MouseEvent) {
 function stopDragArea() {
   isDraggingArea.value = false
 }
+
+function handleZoomArea(event: WheelEvent) {
+  if (!mainAreaRef.value)
+    return
+
+  const mouseX = event.clientX
+  const mouseY = event.clientY
+
+  const rect = mainAreaRef.value.getBoundingClientRect()
+
+  // get mouse position relative to main area
+  const x = mouseX - rect.left
+  const y = mouseY - rect.top
+
+  // get new scale
+  let newScale = scale.value
+  if (event.deltaY < 0)
+    newScale *= ZOOM_SENS
+  else
+    newScale /= ZOOM_SENS
+  // clamp
+  if (newScale < 0.5)
+    newScale = 0.5
+  else if (newScale > 2)
+    newScale = 2
+
+  // change offset to center zoom
+  offsetX.value = x - (x - offsetX.value) * (newScale / scale.value)
+  offsetY.value = y - (y - offsetY.value) * (newScale / scale.value)
+
+  scale.value = newScale
+}
 </script>
 
 <template>
@@ -36,10 +71,11 @@ function stopDragArea() {
   @mousemove="handleMouseMove"
   @mouseup="stopDragArea"
   @mouseleave="stopDragArea"
+  @wheel.prevent="handleZoomArea"
 >
   <div
     class="canvas"
-    :style="{ transform: `translate(${offsetX}px, ${offsetY}px)` }"
+    :style="{transform: `translate(${offsetX}px, ${offsetY}px) scale(${scale})`}"
   >
     <MatchCardC
       v-for="(match, index) in matchList"
@@ -63,6 +99,7 @@ function stopDragArea() {
 }
 
 .canvas {
+  transform-origin: 0 0;
   position: relative;
   width: 100%;
   height: 100%;

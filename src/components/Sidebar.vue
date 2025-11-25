@@ -35,8 +35,8 @@ import TeamCardC from './TeamCardC.vue';
   text-align: center;
   width: 340px;
   height: 100%;
-  box-shadow: 0 0 8px var(--color-border);
   background-color: var(--color-background-soft);
+  box-shadow: -1px 0 9px var(--color-shadow);
   clip-path: inset(0 -10px 0 0);
 }
 .sidebar h2 {
