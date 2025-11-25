@@ -87,6 +87,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* minimal scrollbar (global) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-hover) transparent;
+}
+
 html[data-theme="light"] .btn {
   background-color: var(--purple-primary) !important;
   color: var(--vt-c-white-mute);

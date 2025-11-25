@@ -28,11 +28,10 @@ onMounted(() => {
 
 <style scoped>
 #container {
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  left: 0;
-  top: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  inset: 0;
   display: flex;
   flex-direction: column;
 }
@@ -45,6 +44,7 @@ main {
   display: flex;
   width: 100%;
   flex: 1;
+  min-height: 0;
 }
 
 </style>

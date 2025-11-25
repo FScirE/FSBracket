@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { matchList } from '@/assets/global'
+import { teamList, matchList } from '@/assets/global'
 import MatchCardC from './MatchCardC.vue'
 
 const mainAreaRef = ref<HTMLElement | null>(null)

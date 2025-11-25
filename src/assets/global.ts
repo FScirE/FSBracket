@@ -16,37 +16,42 @@ export type Match = {
   }
 }
 
-export const teamList = ref<Team[]>([])
+export const teamList = ref<Team[]>([
+  {
+    name: "Liquid",
+    imageUrl: ""
+  },
+  {
+    name: "Fnatic",
+    imageUrl: ""
+  },
+  {
+    name: "NTMR",
+    imageUrl: ""
+  },
+  {
+    name: "M80",
+    imageUrl: ""
+  }
+])
 export const matchList = ref<Match[]>([
   {
     team1: {
-      team: {
-        name: "Liquid",
-        imageUrl: ""
-      },
+      team: teamList.value[0]!,
       score: 1
     },
     team2: {
-      team: {
-        name: "Fnatic",
-        imageUrl: ""
-      },
+      team: teamList.value[1]!,
       score: 3
     }
   },
   {
     team1: {
-      team: {
-        name: "NTMR",
-        imageUrl: ""
-      },
+      team: teamList.value[2]!,
       score: 3
     },
     team2: {
-      team: {
-        name: "M80",
-        imageUrl: ""
-      },
+      team: teamList.value[3]!,
       score: 2
     }
   }

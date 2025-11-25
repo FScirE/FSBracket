@@ -1,18 +1,23 @@
 <script setup lang="ts">
 import type { Team } from '@/assets/global';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   team: Team,
-  score: number
-}>()
+  score?: number | null
+}>(), {
+  score: null
+})
 </script>
 
 <template>
 <div class="team-card">
-  <div class="team-name p-1">
-    <h4>{{ team.name }}</h4>
+  <div class="team-image">
+    <img :src="team.imageUrl" :alt="team.name"></img>
   </div>
-  <div class="team-score p-1">
+  <div class="team-name ps-2">
+    <h5>{{ team.name }}</h5>
+  </div>
+  <div class="team-score" v-if="score !== null">
     <h4>{{ score }}</h4>
   </div>
 </div>
@@ -22,9 +27,23 @@ const props = defineProps<{
 .team-card {
   flex: 1;
   width: 100%;
-  height: 100%;
+  height: fit-content;
   display: grid;
-  grid-template-columns: 5fr 1fr;
+  grid-template-columns: 1fr 4fr auto;
+}
+
+.team-image {
+  height: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background-color: var(--color-background-mute);
+}
+.team-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  overflow: hidden;
 }
 
 .team-name {
@@ -34,7 +53,7 @@ const props = defineProps<{
   width: 100%;
   background-color: var(--color-border-hover);
 }
-.team-name h4 {
+.team-name h5 {
   margin: 0;
 }
 
@@ -42,7 +61,8 @@ const props = defineProps<{
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  height: 100%;
+  width: 2.1rem;
   background-color: var(--purple-primary);
   color: var(--white-dark);
 }
