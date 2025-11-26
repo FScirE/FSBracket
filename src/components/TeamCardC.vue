@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import type { Team } from '@/assets/global';
 
 const props = withDefaults(defineProps<{
@@ -8,6 +8,12 @@ const props = withDefaults(defineProps<{
 }>(), {
   score: null
 })
+
+const emit = defineEmits<{
+  (e: 'update:score', value: number): void
+}>()
+
+const input = ref(props.score ?? 0)
 
 const textColor = computed(() => {
   if (props.team.color.startsWith("#")) {
@@ -32,6 +38,22 @@ const textColor = computed(() => {
   }
   return null
 })
+
+function handleInput() {
+  let num = input.value
+  // clamp to 0-9
+  if (!num || num < 0) {
+    input.value = 0
+    emit('update:score', 0)
+  }
+  else if (num > 99) {
+    input.value = props.score!
+    emit('update:score', props.score!)
+  }
+  else {
+    emit('update:score', num)
+  }
+}
 </script>
 
 <template>
@@ -46,7 +68,13 @@ const textColor = computed(() => {
     <h5>{{ team.name }}</h5>
   </div>
   <div class="team-score" v-if="score !== null">
-    <h4>{{ score }}</h4>
+    <input
+      class="fs-4 fw-medium"
+      type="number"
+      v-model.number="input"
+      @input="handleInput"
+      min="0"
+      max="99">
   </div>
 </div>
 </template>
@@ -96,7 +124,16 @@ const textColor = computed(() => {
   background-color: var(--purple-primary);
   color: var(--white-dark);
 }
-.team-score h4 {
+.team-score input {
+  all: unset;
+  text-align: center;
+  cursor: text;
+  width: 100%;
+  margin: 0;
+}
+.team-score input::-webkit-outer-spin-button,
+.team-score input::-webkit-inner-spin-button {
+  appearance: none;
   margin: 0;
 }
 </style>

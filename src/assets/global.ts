@@ -56,7 +56,7 @@ export const matchList = ref<Match[]>([
   },
   {
     posX: 100,
-    posY: 300,
+    posY: 250,
     team1: {
       team: teamList.value[2]!,
       score: 3

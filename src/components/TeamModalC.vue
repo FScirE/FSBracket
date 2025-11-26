@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { teamList, type Team } from '@/assets/global';
+import { teamList } from '@/assets/global';
 
 const name = ref("Example")
 const imageUrl = ref("https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/LEGO_logo.svg/768px-LEGO_logo.svg.png")

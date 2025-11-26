@@ -13,7 +13,7 @@ const cardRef = ref<HTMLElement | null>(null)
 const dragStartX = ref(0)
 const dragStartY = ref(0)
 
-const STICK_RANGE = 12 // threshold for snapping in px
+const STICK_RANGE = 16 // threshold for snapping in px
 
 function startDragCard(event: MouseEvent) {
   event.stopPropagation() // hinder area drag
