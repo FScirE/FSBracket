@@ -101,11 +101,11 @@ body {
   border: none;
 }
 html[data-theme="light"] .btn-primary {
-  background-color: var(--purple-primary) !important;
+  background-color: var(--purple-primary);
   color: var(--vt-c-white-mute);
 }
 html[data-theme="dark"] .btn-primary {
-  background-color: var(--purple-primary) !important;
+  background-color: var(--purple-primary);
   color: var(--white-dark);
 }
 .btn-secondary {

@@ -7,10 +7,12 @@ export type Team = {
 }
 
 export type Match = {
+  posX: number,
+  posY: number,
   team1: {
     team: Team,
     score: number
-  }
+  },
   team2: {
     team: Team,
     score: number
@@ -41,6 +43,8 @@ export const teamList = ref<Team[]>([
 ])
 export const matchList = ref<Match[]>([
   {
+    posX: 100,
+    posY: 100,
     team1: {
       team: teamList.value[0]!,
       score: 1
@@ -51,6 +55,8 @@ export const matchList = ref<Match[]>([
     }
   },
   {
+    posX: 100,
+    posY: 300,
     team1: {
       team: teamList.value[2]!,
       score: 3

@@ -12,17 +12,20 @@ const props = withDefaults(defineProps<{
 const textColor = computed(() => {
   if (props.team.color.startsWith("#")) {
     // get r, g, and b values
+    let r, g, b
     let hex = props.team.color.slice(1)
     if (hex.length === 3) {
-      const r = parseInt(hex[0]! + hex[0], 16)
-      const g = parseInt(hex[1]! + hex[1], 16)
-      const b = parseInt(hex[2]! + hex[2], 16)
+      r = parseInt(hex[0]! + hex[0], 16)
+      g = parseInt(hex[1]! + hex[1], 16)
+      b = parseInt(hex[2]! + hex[2], 16)
     }
-    if (hex.length !== 6)
-      return null
-    const r = parseInt(hex.slice(0, 2), 16)
-    const g = parseInt(hex.slice(2, 4), 16)
-    const b = parseInt(hex.slice(4, 6), 16)
+    else if (hex.length === 6) {
+      r = parseInt(hex.slice(0, 2), 16)
+      g = parseInt(hex.slice(2, 4), 16)
+      b = parseInt(hex.slice(4, 6), 16)
+    }
+    else
+      return
     // luminance to determine if white or black text
     const lum = (r * 299 + g * 587 + b * 114) / 1000
     return lum >= 150 ? 'var(--vt-c-indigo)' : 'var(--vt-c-white-dark)'
@@ -61,7 +64,8 @@ const textColor = computed(() => {
   height: 100%;
   aspect-ratio: 1;
   overflow: hidden;
-  background-color: var(--color-background-mute);
+  background-color: var(--black-dark);
+  color: var(--white-dark)
 }
 .team-image img {
   width: 100%;

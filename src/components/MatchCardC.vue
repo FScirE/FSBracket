@@ -10,8 +10,6 @@ const props = defineProps<{
 
 const isDragging = ref(false)
 const cardRef = ref<HTMLElement | null>(null)
-const posX = ref(0)
-const posY = ref(0)
 const dragStartX = ref(0)
 const dragStartY = ref(0)
 
@@ -30,8 +28,8 @@ function startDragCard(event: MouseEvent) {
   const pointerLocalX = (event.clientX - canvasRect.left) / props.scale
   const pointerLocalY = (event.clientY - canvasRect.top) / props.scale
 
-  dragStartX.value = pointerLocalX - posX.value
-  dragStartY.value = pointerLocalY - posY.value
+  dragStartX.value = pointerLocalX - props.match.posX
+  dragStartY.value = pointerLocalY - props.match.posY
 
   if (cardRef.value !== null)
     cardRef.value!.style.zIndex = "11";
@@ -70,8 +68,8 @@ function handleMouseMove(event: MouseEvent) {
       tempY = otherY
   })
 
-  posX.value = tempX
-  posY.value = tempY
+  props.match.posX = tempX
+  props.match.posY = tempY
 }
 
 function stopDragCard() {
@@ -85,7 +83,7 @@ function stopDragCard() {
 <div
   class="match-card"
   ref="cardRef"
-  :style="{ transform: `translate(${posX}px, ${posY}px)` }"
+  :style="{ transform: `translate(${props.match.posX}px, ${props.match.posY}px)` }"
   @mousedown="startDragCard"
   @mousemove="handleMouseMove"
   @mouseup="stopDragCard"
@@ -93,11 +91,11 @@ function stopDragCard() {
 >
   <TeamCardC
     :team="match.team1.team"
-    :score="match.team1.score"
+    v-model:score="match.team1.score"
   />
   <TeamCardC
     :team="match.team2.team"
-    :score="match.team2.score"
+    v-model:score="match.team2.score"
   />
 </div>
 </template>
