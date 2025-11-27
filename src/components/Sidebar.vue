@@ -1,7 +1,38 @@
 <script setup lang="ts">
-import { teamList } from '@/assets/global';
-import TeamCardC from './TeamCardC.vue';
-import TeamModalC from './TeamModalC.vue';
+import { ref } from 'vue'
+import { teamList, matchList, type Team } from '@/assets/global';
+import TeamCardC from './cards/TeamCardC.vue';
+import TeamModalC from './modals/TeamModalC.vue';
+
+const selectedTeams = ref<Team[]>([])
+
+function onClickTeam(team: Team) {
+  const index = selectedTeams.value.indexOf(team)
+  if (index != -1)
+    selectedTeams.value.splice(index, 1)
+  else
+    selectedTeams.value.push(team)
+  if (selectedTeams.value.length > 2) // keep max 2 selected
+    selectedTeams.value.shift()
+}
+
+function addMatch() {
+  if (!selectedTeams.value[0] || !selectedTeams.value[1])
+    return
+  matchList.value.push({
+    posX: 0,
+    posY: 0,
+    team1: {
+      team: selectedTeams.value[0],
+      score: 0
+    },
+    team2: {
+      team: selectedTeams.value[1],
+      score: 0
+    }
+  })
+  selectedTeams.value = []
+}
 </script>
 
 <template>
@@ -13,6 +44,8 @@ import TeamModalC from './TeamModalC.vue';
         class="team-item mx-3"
         v-for="(team, index) in teamList"
         :key="index"
+        :class="{ 'selected-team' : selectedTeams.indexOf(team) != -1 }"
+        @click="onClickTeam(team)"
       >
         <TeamCardC
           :team="team"
@@ -21,8 +54,12 @@ import TeamModalC from './TeamModalC.vue';
     </div>
     <div class="bottom-section my-3">
       <button class="btn btn-primary p-2 mt-4" type="button" data-bs-toggle="modal" data-bs-target="#team-modal">
-        <span class="me-2">New</span>
         <i class="pi pi-plus"></i>
+        <span class="ms-2">Team</span>
+      </button>
+      <button class="btn btn-primary p-2 mt-4" type="button" :disabled="selectedTeams.length < 2" @click="addMatch">
+        <i class="pi pi-plus"></i>
+        <span class="ms-2">Match</span>
       </button>
       <TeamModalC />
     </div>
@@ -44,6 +81,7 @@ import TeamModalC from './TeamModalC.vue';
 }
 #collapse-sidebar {
   box-shadow: -1px 0 9px var(--color-shadow);
+  border-right: 1px solid var(--color-border);
   clip-path: inset(0 -10px 0 0);
 }
 
@@ -58,13 +96,21 @@ import TeamModalC from './TeamModalC.vue';
 .team-item {
   flex: 0 0 auto;
   border-radius: 0.5rem;
+  border: 2px solid transparent;
   overflow: hidden;
+  box-shadow: 0 0 10px -4px var(--color-border-hover);
+}
+.team-item:hover {
+  cursor: pointer;
+}
+.selected-team {
+  border: 2px solid var(--purple-primary);
 }
 
 .bottom-section {
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   border-top: 1px solid var(--color-border-hover);
 }
 .bottom-button button {

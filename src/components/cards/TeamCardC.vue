@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import type { Team } from '@/assets/global';
 
 const props = withDefaults(defineProps<{
@@ -34,9 +34,9 @@ const textColor = computed(() => {
       return
     // luminance to determine if white or black text
     const lum = (r * 299 + g * 587 + b * 114) / 1000
-    return lum >= 150 ? 'var(--vt-c-indigo)' : 'var(--vt-c-white-dark)'
+    return lum >= 150 ? '#040404' : '#f0f0f0'
   }
-  return null
+  return ''
 })
 
 function handleInput() {
@@ -63,7 +63,7 @@ function handleInput() {
   </div>
   <div
     class="team-name ps-2"
-    :style="{ backgroundColor: team.color, color: (textColor ? textColor : '') }"
+    :style="{ backgroundColor: team.color, color: textColor }"
   >
     <h5>{{ team.name }}</h5>
   </div>
@@ -73,6 +73,7 @@ function handleInput() {
       type="number"
       v-model.number="input"
       @input="handleInput"
+      @keyup.enter="($event.target as any).blur()"
       min="0"
       max="99">
   </div>

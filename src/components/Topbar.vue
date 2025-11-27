@@ -55,6 +55,7 @@ function toggleTheme() {
   width: 100%;
   background-color: var(--color-background-mute);
   box-shadow: 0 -5px 8px -6px inset var(--color-border);
+  border-bottom: 1px solid var(--color-border);
 }
 
 button {

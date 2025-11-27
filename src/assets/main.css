@@ -8,21 +8,20 @@
   --vt-c-black-soft: #222222;
   --vt-c-black-mute: #282828;
 
-  --vt-c-indigo: #2c3e50;
+  --vt-c-divider-light-1: #bbbbbb;
+  --vt-c-divider-light-2: #e0e0e0;
+  --vt-c-divider-dark-1: #3f3f3f;
+  --vt-c-divider-dark-2: #353535;
 
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.35);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.16);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
-
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
+  --vt-c-text-light-1: var(--vt-c-divider-dark-2);
+  --vt-c-text-light-2: #7a7a7a;
   --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(240, 240, 240, 0.7);
+  --vt-c-text-dark-2: #afafaf;
 
-  --purple: #672CD3;
-  --purple-light: #8556DC;
-  --white-dark: #e0e0e0;
+  --purple: #672cd3;
+  --purple-dark: #5619a5;
+  --purple-light: #8556dc;
+  --white-dark: #e2e2e2;
   --black-dark: #000;
 }
 
@@ -99,17 +98,32 @@ body {
 /* override bootstrap button colors */
 .btn {
   border: none;
+  transition: all 0.15s ease;
+}
+.btn:active {
+  opacity: 0.6;
+}
+.btn:disabled {
+  filter: brightness(0.8);
+}
+.btn-primary,
+.btn-primary:disabled,
+.btn-primary:active {
+  background-color: var(--purple-primary) !important;
+}
+.btn-primary:hover {
+  background-color: var(--purple-dark);
 }
 html[data-theme="light"] .btn-primary {
-  background-color: var(--purple-primary);
   color: var(--vt-c-white-mute);
 }
 html[data-theme="dark"] .btn-primary {
-  background-color: var(--purple-primary);
   color: var(--white-dark);
 }
-.btn-secondary {
-  background-color: var(--color-border);
+.btn-secondary,
+.btn-secondary:disabled,
+.btn-secondary:active {
+  background-color: var(--color-border) !important;
   color: var(--color-text);
 }
 

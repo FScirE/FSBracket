@@ -33,6 +33,10 @@ function startDragCard(event: MouseEvent) {
 
   if (cardRef.value !== null)
     cardRef.value!.style.zIndex = "11";
+
+  // listen on window
+  window.addEventListener('mousemove', handleMouseMove)
+  window.addEventListener('mouseup', stopDragCard)
 }
 
 function handleMouseMove(event: MouseEvent) {
@@ -76,6 +80,10 @@ function stopDragCard() {
   isDragging.value = false
   if (cardRef.value !== null)
     cardRef.value!.style.zIndex = "10";
+
+  // remove listeners
+  window.removeEventListener('mousemove', handleMouseMove)
+  window.removeEventListener('mouseup', stopDragCard)
 }
 </script>
 
@@ -85,9 +93,6 @@ function stopDragCard() {
   ref="cardRef"
   :style="{ transform: `translate(${props.match.posX}px, ${props.match.posY}px)` }"
   @mousedown="startDragCard"
-  @mousemove="handleMouseMove"
-  @mouseup="stopDragCard"
-  @mouseleave="stopDragCard"
 >
   <TeamCardC
     :team="match.team1.team"
