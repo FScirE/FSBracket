@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { teamList, matchList, type Team } from '@/assets/global';
+import { teamList, matchList, type Team, makeId } from '@/assets/global';
 import TeamCardC from './cards/TeamCardC.vue';
 import TeamModalC from './modals/TeamModalC.vue';
 
@@ -20,14 +20,15 @@ function addMatch() {
   if (!selectedTeams.value[0] || !selectedTeams.value[1])
     return
   matchList.value.push({
+    id: makeId("m"),
     posX: 0,
     posY: 0,
     team1: {
-      team: selectedTeams.value[0],
+      source: { type: "team", teamId: selectedTeams.value[0].id },
       score: 0
     },
     team2: {
-      team: selectedTeams.value[1],
+      source: { type: "team", teamId: selectedTeams.value[1].id },
       score: 0
     }
   })
@@ -38,7 +39,7 @@ function addMatch() {
 <template>
 <div class="collapse collapse-horizontal show" id="collapse-sidebar">
   <div class="sidebar p-3">
-    <h2 class="pb-3 mb-3 mt-1">Teams</h2>
+    <h2 class="pb-3 mb-3 mt-1">Teams <i class="pi pi-users ms-3"></i></h2>
     <div class="team-list my-4 pr-1">
       <div
         class="team-item mx-3"

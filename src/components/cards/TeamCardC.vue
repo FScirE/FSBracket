@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue';
 import type { Team } from '@/assets/global';
 
 const props = withDefaults(defineProps<{
-  team: Team,
+  team: Team | null,
   score?: number | null
 }>(), {
   score: null
@@ -16,7 +16,7 @@ const emit = defineEmits<{
 const input = ref(props.score ?? 0)
 
 const textColor = computed(() => {
-  if (props.team.color.startsWith("#")) {
+  if (props.team && props.team.color.startsWith("#")) {
     // get r, g, and b values
     let r, g, b
     let hex = props.team.color.slice(1)
@@ -57,25 +57,37 @@ function handleInput() {
 </script>
 
 <template>
-<div class="team-card">
-  <div class="team-image">
-    <img :src="team.imageUrl" :alt="team.name"></img>
+<div class="team-card" :class="{ 'team-card-placeholder' : team === null }">
+  <div
+    class="team-image"
+    :style="{ backgroundColor: (team)? '' : 'var(--color-border-hover)'}"
+  >
+    <img :src="team.imageUrl" :alt="team.name" v-if="team"></img>
   </div>
   <div
     class="team-name ps-2"
-    :style="{ backgroundColor: team.color, color: textColor }"
+    :style="{
+      backgroundColor: team?.color ?? 'var(--color-border-hover)',
+      color: textColor
+    }"
   >
-    <h5>{{ team.name }}</h5>
+    <h5 v-if="team">{{ team.name }}</h5>
+    <p class="fw-medium mb-0" v-else>TBD</p>
   </div>
-  <div class="team-score" v-if="score !== null">
-    <input
+  <div
+    class="team-score"
+    v-if="score !== null"
+    :style="{ backgroundColor: (team)? '' : 'var(--color-border-hover)'}"
+  >
+    <input v-if="team"
       class="fs-4 fw-medium"
       type="number"
       v-model.number="input"
       @input="handleInput"
       @keyup.enter="($event.target as any).blur()"
       min="0"
-      max="99">
+      max="99"
+    >
   </div>
 </div>
 </template>
@@ -88,13 +100,17 @@ function handleInput() {
   display: grid;
   grid-template-columns: 1fr 4fr auto;
 }
+.team-card-placeholder {
+  filter: brightness(0.8);
+}
 
 .team-image {
   height: 100%;
   aspect-ratio: 1;
   overflow: hidden;
+  margin-right: 1px;
   background-color: var(--black-dark);
-  color: var(--white-dark)
+  color: var(--white-dark);
 }
 .team-image img {
   width: 100%;

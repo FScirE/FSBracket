@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { Match } from '@/assets/global';
+import { ref, computed } from 'vue'
+import { resolveTeamFromSource, teamList, type Match } from '@/assets/global';
 import TeamCardC from './TeamCardC.vue';
 
 const props = defineProps<{
@@ -12,6 +12,9 @@ const isDragging = ref(false)
 const cardRef = ref<HTMLElement | null>(null)
 const dragStartX = ref(0)
 const dragStartY = ref(0)
+
+const team1 = computed(() => resolveTeamFromSource(props.match.team1.source))
+const team2 = computed(() => resolveTeamFromSource(props.match.team2.source))
 
 const STICK_RANGE = 16 // threshold for snapping in px
 
@@ -95,11 +98,11 @@ function stopDragCard() {
   @mousedown="startDragCard"
 >
   <TeamCardC
-    :team="match.team1.team"
+    :team="team1!"
     v-model:score="match.team1.score"
   />
   <TeamCardC
-    :team="match.team2.team"
+    :team="team2!"
     v-model:score="match.team2.score"
   />
 </div>
