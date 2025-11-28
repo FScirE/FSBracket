@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { resolveTeamFromSource, teamList, type Match } from '@/assets/global';
+import { getTeamFromSource, teamList, STICK_RANGE, MATCH_GAP, type Match } from '@/assets/global';
 import TeamCardC from './TeamCardC.vue';
 
 const props = defineProps<{
@@ -13,10 +13,8 @@ const cardRef = ref<HTMLElement | null>(null)
 const dragStartX = ref(0)
 const dragStartY = ref(0)
 
-const team1 = computed(() => resolveTeamFromSource(props.match.team1.source))
-const team2 = computed(() => resolveTeamFromSource(props.match.team2.source))
-
-const STICK_RANGE = 16 // threshold for snapping in px
+const team1 = computed(() => getTeamFromSource(props.match.team1.source))
+const team2 = computed(() => getTeamFromSource(props.match.team2.source))
 
 function startDragCard(event: MouseEvent) {
   event.stopPropagation() // hinder area drag
@@ -58,7 +56,7 @@ function handleMouseMove(event: MouseEvent) {
   let tempX = pointerLocalX - dragStartX.value
   let tempY = pointerLocalY - dragStartY.value
 
-  // snap to other cards within range in x- or y-axis
+  // snap to other cards
   const others = canvas.querySelectorAll('.match-card')
   others.forEach(e => {
     if (e === cardRef.value)
@@ -68,11 +66,24 @@ function handleMouseMove(event: MouseEvent) {
     const otherX = (r.left - canvasRect.left) / props.scale
     const otherY = (r.top - canvasRect.top) / props.scale
 
-    // snapping range is 12px on screen, not local
-    if (Math.abs(tempX - otherX) <= STICK_RANGE / props.scale)
+    const snapRange = STICK_RANGE / props.scale
+
+    // snap on matching axis (screen)
+    if (Math.abs(tempX - otherX) <= snapRange)
       tempX = otherX
-    if (Math.abs(tempY - otherY) <= STICK_RANGE / props.scale)
+    if (Math.abs(tempY - otherY) <= snapRange)
       tempY = otherY
+
+    const thisHeight = cardRef.value!.getBoundingClientRect().height / props.scale
+    const otherHeight = r.height / props.scale
+
+    // snap to default gap (local)
+    if (tempX === otherX) {
+      if(Math.abs(otherY - (tempY + thisHeight) - MATCH_GAP) <= snapRange)
+        tempY = otherY - thisHeight - MATCH_GAP
+      if (Math.abs(tempY - (otherY + otherHeight) - MATCH_GAP) <= snapRange)
+        tempY = otherY + otherHeight + MATCH_GAP
+    }
   })
 
   props.match.posX = tempX
@@ -93,6 +104,7 @@ function stopDragCard() {
 <template>
 <div
   class="match-card"
+  :id="match.id"
   ref="cardRef"
   :style="{ transform: `translate(${props.match.posX}px, ${props.match.posY}px)` }"
   @mousedown="startDragCard"

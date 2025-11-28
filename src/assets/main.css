@@ -39,6 +39,8 @@ html[data-theme="light"] {
 
   --purple-primary: var(--purple-light);
   --color-shadow: var(--vt-c-divider-light-1);
+
+  --color-extreme: var(--vt-c-white)
 }
 html[data-theme="dark"] {
   --color-background: var(--vt-c-black);
@@ -53,6 +55,8 @@ html[data-theme="dark"] {
 
   --purple-primary: var(--purple);
   --color-shadow: var(--black-dark);
+
+  --color-extreme: var(--black-dark)
 }
 
 *,
@@ -70,7 +74,7 @@ html {
 body {
   min-height: 100vh;
   color: var(--color-text);
-  background: var(--color-background);
+  background: var(--color-extreme);
   font-family:
     Inter,
     -apple-system,
@@ -112,7 +116,7 @@ body {
   background-color: var(--purple-primary) !important;
 }
 .btn-primary:hover {
-  background-color: var(--purple-dark);
+  background-color: var(--purple-dark) !important;
 }
 html[data-theme="light"] .btn-primary {
   color: var(--vt-c-white-mute);
@@ -124,7 +128,10 @@ html[data-theme="dark"] .btn-primary {
 .btn-secondary:disabled,
 .btn-secondary:active {
   background-color: var(--color-border) !important;
-  color: var(--color-text);
+  color: var(--color-text)
+}
+.btn-secondary:hover {
+  background-color: var(--color-border-hover) !important;
 }
 
 /* override bootstrap modal colors */
@@ -141,4 +148,10 @@ html[data-theme="dark"] .btn-primary {
 }
 html[data-theme="dark"] .btn-close {
   filter: invert(1) grayscale(100%);
+}
+
+/* override bootstrap input styling */
+input:focus {
+  border: 1px solid var(--purple-primary) !important;
+  box-shadow: 0 0 0 1px var(--purple-primary) !important;
 }

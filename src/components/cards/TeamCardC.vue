@@ -15,30 +15,6 @@ const emit = defineEmits<{
 
 const input = ref(props.score ?? 0)
 
-const textColor = computed(() => {
-  if (props.team && props.team.color.startsWith("#")) {
-    // get r, g, and b values
-    let r, g, b
-    let hex = props.team.color.slice(1)
-    if (hex.length === 3) {
-      r = parseInt(hex[0]! + hex[0], 16)
-      g = parseInt(hex[1]! + hex[1], 16)
-      b = parseInt(hex[2]! + hex[2], 16)
-    }
-    else if (hex.length === 6) {
-      r = parseInt(hex.slice(0, 2), 16)
-      g = parseInt(hex.slice(2, 4), 16)
-      b = parseInt(hex.slice(4, 6), 16)
-    }
-    else
-      return
-    // luminance to determine if white or black text
-    const lum = (r * 299 + g * 587 + b * 114) / 1000
-    return lum >= 150 ? '#040404' : '#f0f0f0'
-  }
-  return ''
-})
-
 function handleInput() {
   let num = input.value
   // clamp to 0-9
@@ -58,19 +34,10 @@ function handleInput() {
 
 <template>
 <div class="team-card" :class="{ 'team-card-placeholder' : team === null }">
-  <div
-    class="team-image"
-    :style="{ backgroundColor: (team)? '' : 'var(--color-border-hover)'}"
-  >
+  <div class="team-image">
     <img :src="team.imageUrl" :alt="team.name" v-if="team"></img>
   </div>
-  <div
-    class="team-name ps-2"
-    :style="{
-      backgroundColor: team?.color ?? 'var(--color-border-hover)',
-      color: textColor
-    }"
-  >
+  <div class="team-name ps-2">
     <h5 v-if="team">{{ team.name }}</h5>
     <p class="fw-medium mb-0" v-else>TBD</p>
   </div>
@@ -96,7 +63,6 @@ function handleInput() {
 .team-card {
   flex: 1;
   width: 100%;
-  height: fit-content;
   display: grid;
   grid-template-columns: 1fr 4fr auto;
 }
@@ -109,8 +75,7 @@ function handleInput() {
   aspect-ratio: 1;
   overflow: hidden;
   margin-right: 1px;
-  background-color: var(--black-dark);
-  color: var(--white-dark);
+  background-color: var(--color-border-hover);
 }
 .team-image img {
   width: 100%;
@@ -123,6 +88,7 @@ function handleInput() {
 .team-name {
   display: flex;
   align-items: center;
+  overflow-x: hidden;
   flex: 1;
   width: 100%;
   background-color: var(--color-border-hover);

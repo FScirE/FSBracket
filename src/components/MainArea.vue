@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { teamList, matchList } from '@/assets/global'
+import { teamList, matchList, ZOOM_SENS } from '@/assets/global'
 import MatchCardC from './cards/MatchCardC.vue'
 
 const mainAreaRef = ref<HTMLElement | null>(null)
@@ -10,8 +10,6 @@ const dragStartY = ref(0)
 const offsetX = ref(0)
 const offsetY = ref(0)
 const scale = ref(1)
-
-const ZOOM_SENS = 1.10
 
 function startDragArea(event: MouseEvent) {
   isDraggingArea.value = true
@@ -93,6 +91,7 @@ function handleZoomArea(event: WheelEvent) {
   overflow: hidden;
   cursor: grab;
   user-select: none;
+  background-color: var(--color-background);
 }
 
 .mainarea:active {

@@ -3,8 +3,12 @@ import { ref } from 'vue'
 import { teamList, matchList, type Team, makeId } from '@/assets/global';
 import TeamCardC from './cards/TeamCardC.vue';
 import TeamModalC from './modals/TeamModalC.vue';
+import { Modal } from 'bootstrap'
 
 const selectedTeams = ref<Team[]>([])
+
+const teamModalMode = ref<"add" | "edit">("add")
+const teamModalId = ref<string>("")
 
 function onClickTeam(team: Team) {
   const index = selectedTeams.value.indexOf(team)
@@ -14,6 +18,26 @@ function onClickTeam(team: Team) {
     selectedTeams.value.push(team)
   if (selectedTeams.value.length > 2) // keep max 2 selected
     selectedTeams.value.shift()
+}
+
+function openTeamModal() {
+  const element = document.getElementById("team-modal")
+  if (!element)
+    return
+  const modal = Modal.getOrCreateInstance(element)
+  if (!modal)
+    return
+  modal.show()
+}
+function openTeamEdit(team: Team) {
+  teamModalMode.value = "edit"
+  teamModalId.value = team.id
+  openTeamModal()
+}
+function openTeamAdd() {
+  teamModalMode.value = "add"
+  teamModalId.value = ""
+  openTeamModal()
 }
 
 function addMatch() {
@@ -40,21 +64,35 @@ function addMatch() {
 <div class="collapse collapse-horizontal show" id="collapse-sidebar">
   <div class="sidebar p-3">
     <h2 class="pb-3 mb-3 mt-1">Teams <i class="pi pi-users ms-3"></i></h2>
-    <div class="team-list my-4 pr-1">
+    <div class="team-list my-4 pr-1" @click="selectedTeams = []">
       <div
         class="team-item mx-3"
         v-for="(team, index) in teamList"
         :key="index"
-        :class="{ 'selected-team' : selectedTeams.indexOf(team) != -1 }"
-        @click="onClickTeam(team)"
       >
-        <TeamCardC
-          :team="team"
-        />
+        <div
+          class="team-item-card"
+          :class="{ 'selected-team' : selectedTeams.indexOf(team) != -1 }"
+          @click.stop="onClickTeam(team)"
+        >
+          <TeamCardC
+            :team="team"
+          />
+          <button class="edit-team-button btn btn-primary"
+              type="button"
+              @click.stop="openTeamEdit(team)"
+            >
+              <span class="visually-hidden">Edit</span>
+              <i class="pi pi-pencil mx-1"></i>
+          </button>
+        </div>
       </div>
     </div>
     <div class="bottom-section my-3">
-      <button class="btn btn-primary p-2 mt-4" type="button" data-bs-toggle="modal" data-bs-target="#team-modal">
+      <button
+        class="btn btn-primary p-2 mt-4" type="button"
+        @click="openTeamAdd"
+      >
         <i class="pi pi-plus"></i>
         <span class="ms-2">Team</span>
       </button>
@@ -62,7 +100,10 @@ function addMatch() {
         <i class="pi pi-plus"></i>
         <span class="ms-2">Match</span>
       </button>
-      <TeamModalC />
+      <TeamModalC
+        :mode="teamModalMode"
+        :teamId="teamModalId"
+      />
     </div>
   </div>
 </div>
@@ -94,18 +135,30 @@ function addMatch() {
   flex: 1;
 }
 
-.team-item {
-  flex: 0 0 auto;
+.team-item-card {
+  position: relative;
+  overflow: hidden;
   border-radius: 0.5rem;
   border: 2px solid transparent;
-  overflow: hidden;
-  box-shadow: 0 0 10px -4px var(--color-border-hover);
 }
-.team-item:hover {
+.team-item-card:hover {
   cursor: pointer;
 }
 .selected-team {
   border: 2px solid var(--purple-primary);
+}
+
+.edit-team-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 0;
+  padding: 0;
+  border-radius: 0;
+}
+.team-item-card:hover > .edit-team-button {
+  width: 2.1rem; /* same as score width */
 }
 
 .bottom-section {

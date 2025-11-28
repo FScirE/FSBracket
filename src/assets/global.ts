@@ -1,6 +1,14 @@
 import { ref } from 'vue'
 
 //
+/* global variables */
+//
+
+export const ZOOM_SENS = 1.10
+export const STICK_RANGE = 12 // threshold for snapping in px (screen)
+export const MATCH_GAP = 54 // default gap for matches in px (local), for snapping
+
+//
 /* helper functions */
 //
 
@@ -41,7 +49,7 @@ export function removeTeamById(id: string) {
 }
 
 // recursively get team id from source
-export function resolveTeamFromSource(source: TeamSource, visited: string[] = new Array<string>()) {
+export function getTeamFromSource(source: TeamSource, visited: string[] = new Array<string>()) {
   if (!source)
     return null
   if (source.type === "none")
@@ -68,7 +76,7 @@ export function resolveTeamFromSource(source: TeamSource, visited: string[] = ne
   const loser = winner === "team1" ? "team2" : "team1"
   const chosenSource = source.bracket === "winner" ? parent[winner].source : parent[loser].source
 
-  return resolveTeamFromSource(chosenSource, visited)
+  return getTeamFromSource(chosenSource, visited)
 }
 
 //
@@ -78,8 +86,7 @@ export function resolveTeamFromSource(source: TeamSource, visited: string[] = ne
 export type Team = {
   id: string,
   name: string,
-  imageUrl: string,
-  color: string
+  imageUrl: string
 }
 
 export type TeamSource = {
@@ -116,26 +123,22 @@ export const teamList = ref<Team[]>([
   {
     id: makeId("t"),
     name: "Liquid",
-    imageUrl: "",
-    color: "#13d4f1"
+    imageUrl: ""
   },
   {
     id: makeId("t"),
     name: "Fnatic",
-    imageUrl: "",
-    color: ""
+    imageUrl: ""
   },
   {
     id: makeId("t"),
     name: "NTMR",
-    imageUrl: "",
-    color: "bleh"
+    imageUrl: ""
   },
   {
     id: makeId("t"),
     name: "M80",
-    imageUrl: "",
-    color: ""
+    imageUrl: ""
   }
 ])
 export const matchList = ref<Match[]>([

@@ -1,46 +1,106 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { teamList } from '@/assets/global';
+import { ref, computed, onMounted, watch } from 'vue'
+import { getTeamIndexById, makeId, removeTeamById, teamList } from '@/assets/global';
+import { Modal } from 'bootstrap';
 
-const name = ref("Example")
-const imageUrl = ref("https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/LEGO_logo.svg/768px-LEGO_logo.svg.png")
-const color = ref("#ffee00")
+const props = defineProps<{
+  mode: "add"
+} | {
+  mode: "edit",
+  teamId?: string
+}>()
+
+const modalElement = ref<HTMLElement | null>(null)
+
+const team =  computed(() => {
+  if (props.mode === "add" || !props.teamId)
+    return null
+  return teamList.value[getTeamIndexById(props.teamId)]
+})
+const name = ref<string>("")
+const imageUrl = ref<string>("")
+
+const shown = ref<boolean>(false)
+const removing = ref<boolean>(false)
+
+function onSubmit() {
+  if (props.mode === "add")
+    addTeam()
+  else
+    editTeam()
+}
 
 function addTeam() {
   teamList.value.push({
+    id: makeId("t"),
     name: name.value,
-    imageUrl: imageUrl.value,
-    color: color.value
+    imageUrl: imageUrl.value
   })
 }
+function editTeam() {
+  if (team.value) {
+    team.value.name = name.value
+    team.value.imageUrl = imageUrl.value
+  }
+}
+function removeTeam() {
+  if (!modalElement.value)
+    return
+  const modal = Modal.getInstance(modalElement.value)
+  if (!team.value)
+    return
+  removeTeamById(team.value.id)
+  modal!.hide()
+}
+
+onMounted(() => {
+  document.addEventListener('show.bs.modal', () => {
+    shown.value = true
+  })
+  document.addEventListener('hide.bs.modal', () => {
+    if (document.activeElement)
+      (document.activeElement as HTMLElement).blur();
+  })
+  document.addEventListener('hidden.bs.modal', () => {
+    shown.value = false
+  })
+})
+
+watch(shown, () => {
+  name.value = team.value ? team.value.name : "Example"
+  imageUrl.value = team.value ? team.value.imageUrl : "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/LEGO_logo.svg/768px-LEGO_logo.svg.png"
+  removing.value = false
+})
 </script>
 
 <template>
   <teleport to="body">
-    <div class="modal fade" id="team-modal" tabindex="-1" aria-labelledby="team-modal-label" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
+    <div class="modal fade" id="team-modal" tabindex="-1" aria-labelledby="team-modal-label" aria-hidden="true" ref="modalElement">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-3" id="team-modal-label">Add new team</h1>
+            <h1 class="modal-title fs-3" id="team-modal-label">
+              {{ mode === 'add' ? 'Add new team' : `Edit team: ${team?.name}` }}
+            </h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <form @submit.prevent="addTeam">
-            <div class="modal-body">
+          <form class="d-flex flex-column" id="team-form" @submit.prevent="onSubmit">
+            <div class="modal-body align-self-center w-75">
               <div class="mb-3">
                 <label class="form-label">Name</label>
-                <input class="form-control" v-model="name" />
+                <input class="form-control" v-model="name" maxlength="32" />
               </div>
               <div class="mb-3">
                 <label class="form-label">Image URL</label>
                 <input class="form-control" v-model="imageUrl" />
               </div>
-              <div class="mb-3">
-                <label class="form-label">Color</label>
-                <input class="form-control form-control-color" type="color" v-model="color" />
-              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <div class="button-holder" v-if="mode === 'edit'">
+                <button type="button" class="remove-button btn btn-warning" :class="{ 'text-warning' : removing }" @click.prevent="removing = true">Remove</button>
+                <button type="button" class="confirm-remove-button btn btn-danger" :class="{ 'w-100' : removing }" @click="removeTeam()">Remove</button>
+              </div>
               <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Confirm</button>
             </div>
           </form>
@@ -51,5 +111,16 @@ function addTeam() {
 </template>
 
 <style scoped>
+.button-holder {
+  position: relative;
+}
 
+.confirm-remove-button {
+  position: absolute;
+  overflow: hidden;
+  left: 0;
+  width: 0;
+  padding: 0;
+  height: 100%;
+}
 </style>
