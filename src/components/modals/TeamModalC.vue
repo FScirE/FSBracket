@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { getTeamIndexById, makeId, removeTeamById, teamList } from '@/assets/global';
 import { Modal } from 'bootstrap';
+import DoubleButtonC from '../other/DoubleButtonC.vue';
 
 const props = defineProps<{
   mode: "add"
@@ -21,7 +22,6 @@ const name = ref<string>("")
 const imageUrl = ref<string>("")
 
 const shown = ref<boolean>(false)
-const removing = ref<boolean>(false)
 
 function onSubmit() {
   if (props.mode === "add")
@@ -69,7 +69,6 @@ onMounted(() => {
 watch(shown, () => {
   name.value = team.value ? team.value.name : "Example"
   imageUrl.value = team.value ? team.value.imageUrl : "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/LEGO_logo.svg/768px-LEGO_logo.svg.png"
-  removing.value = false
 })
 </script>
 
@@ -97,10 +96,13 @@ watch(shown, () => {
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <div class="button-holder" v-if="mode === 'edit'">
-                <button type="button" class="remove-button btn btn-warning" :class="{ 'text-warning' : removing }" @click.prevent="removing = true">Remove</button>
-                <button type="button" class="confirm-remove-button btn btn-danger" :class="{ 'w-100' : removing }" @click="removeTeam()">Remove</button>
-              </div>
+              <DoubleButtonC
+                v-if="mode === 'edit'"
+                text1="Remove"
+                text2="Remove"
+                type="right"
+                :callback="removeTeam"
+              />
               <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Confirm</button>
             </div>
           </form>
@@ -111,16 +113,5 @@ watch(shown, () => {
 </template>
 
 <style scoped>
-.button-holder {
-  position: relative;
-}
 
-.confirm-remove-button {
-  position: absolute;
-  overflow: hidden;
-  left: 0;
-  width: 0;
-  padding: 0;
-  height: 100%;
-}
 </style>

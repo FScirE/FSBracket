@@ -4,12 +4,12 @@ import { teamList, matchList, ZOOM_SENS } from '@/assets/global'
 import MatchCardC from './cards/MatchCardC.vue'
 
 const mainAreaRef = ref<HTMLElement | null>(null)
-const isDraggingArea = ref(false)
-const dragStartX = ref(0)
-const dragStartY = ref(0)
-const offsetX = ref(0)
-const offsetY = ref(0)
-const scale = ref(1)
+const isDraggingArea = ref<boolean>(false)
+const dragStartY = ref<number>(0)
+const dragStartX = ref<number>(0)
+const offsetX = ref<number>(0)
+const offsetY = ref<number>(0)
+const scale = ref<number>(1)
 
 function startDragArea(event: MouseEvent) {
   isDraggingArea.value = true

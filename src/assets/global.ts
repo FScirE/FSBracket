@@ -100,7 +100,6 @@ export type TeamSource = {
   type: "none"
 }
 
-
 export type Match = {
   id: string,
   posX: number,

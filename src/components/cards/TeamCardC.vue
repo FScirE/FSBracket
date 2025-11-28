@@ -13,7 +13,7 @@ const emit = defineEmits<{
   (e: 'update:score', value: number): void
 }>()
 
-const input = ref(props.score ?? 0)
+const input = ref<number>(props.score ?? 0)
 
 function handleInput() {
   let num = input.value

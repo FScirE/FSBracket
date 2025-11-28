@@ -10,8 +10,8 @@ const props = defineProps<{
 
 const isDragging = ref(false)
 const cardRef = ref<HTMLElement | null>(null)
-const dragStartX = ref(0)
-const dragStartY = ref(0)
+const dragStartX = ref<number>(0)
+const dragStartY = ref<number>(0)
 
 const team1 = computed(() => getTeamFromSource(props.match.team1.source))
 const team2 = computed(() => getTeamFromSource(props.match.team2.source))
