@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { getTeamIndexById, makeId, removeTeamById, teamList } from '@/assets/global';
 import { Modal } from 'bootstrap';
-import DoubleButtonC from '../other/DoubleButtonC.vue';
+import DoubleButtonC from '@/components/other/DoubleButtonC.vue';
 
 const props = defineProps<{
   mode: "add"

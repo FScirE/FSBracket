@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { getTeamFromSource, teamList, STICK_RANGE, MATCH_GAP, type Match } from '@/assets/global';
-import TeamCardC from './TeamCardC.vue';
+import TeamCardC from '@/components/cards/TeamCardC.vue';
 
 const props = defineProps<{
   match: Match,

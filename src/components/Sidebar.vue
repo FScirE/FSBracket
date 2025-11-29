@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { teamList, matchList, type Team, makeId } from '@/assets/global';
-import TeamCardC from './cards/TeamCardC.vue';
-import TeamModalC from './modals/TeamModalC.vue';
+import { onMounted, ref } from 'vue'
+import { teamList, matchList, type Team, makeId, windowWidth } from '@/assets/global';
+import TeamCardC from '@/components/cards/TeamCardC.vue';
+import TeamModalC from '@/components/modals/TeamModalC.vue';
 import { Modal } from 'bootstrap'
 
 const selectedTeams = ref<Team[]>([])
@@ -61,12 +61,12 @@ function addMatch() {
 </script>
 
 <template>
-<div class="collapse collapse-horizontal show" id="collapse-sidebar">
+<div class="collapse show" id="collapse-sidebar" ref="sidebarElement" :class="{ 'collapse-horizontal' : windowWidth > 800 }">
   <div class="sidebar p-3">
     <h2 class="pb-3 mb-3 mt-1">Teams <i class="pi pi-users ms-3"></i></h2>
     <div class="team-list my-4 pr-1" @click="selectedTeams = []">
       <div
-        class="team-item mx-3"
+        class="team-item mx-2"
         v-for="(team, index) in teamList"
         :key="index"
       >
@@ -78,25 +78,27 @@ function addMatch() {
           <TeamCardC
             :team="team"
           />
-          <button class="edit-team-button btn btn-primary"
-              type="button"
-              @click.stop="openTeamEdit(team)"
-            >
-              <span class="visually-hidden">Edit</span>
-              <i class="pi pi-pencil mx-1"></i>
+          <button
+            class="edit-team-button btn btn-primary"
+            type="button"
+            @click.stop="openTeamEdit(team)"
+            tabindex="-1"
+          >
+            <span class="visually-hidden">Edit</span>
+            <i class="pi pi-pencil mx-1"></i>
           </button>
         </div>
       </div>
     </div>
     <div class="bottom-section my-3">
       <button
-        class="btn btn-primary p-2 mt-4" type="button"
+        class="btn btn-primary p-2" type="button"
         @click="openTeamAdd"
       >
         <i class="pi pi-plus"></i>
         <span class="ms-2">Team</span>
       </button>
-      <button class="btn btn-primary p-2 mt-4" type="button" :disabled="selectedTeams.length < 2" @click="addMatch">
+      <button class="btn btn-primary p-2" type="button" :disabled="selectedTeams.length < 2" @click="addMatch">
         <i class="pi pi-plus"></i>
         <span class="ms-2">Match</span>
       </button>
@@ -114,7 +116,7 @@ function addMatch() {
   display: flex;
   flex-direction: column;
   text-align: center;
-  width: 340px;
+  width: 280px;
   height: 100%;
   background-color: var(--color-background-soft);
 }
@@ -167,7 +169,47 @@ function addMatch() {
   justify-content: space-evenly;
   border-top: 1px solid var(--color-border-hover);
 }
-.bottom-button button {
+.bottom-section button {
   width: fit-content;
+  height: fit-content;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 800px) {
+  .sidebar {
+    width: 100%;
+    height: 200px;
+    flex-direction: row;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .sidebar h2 {
+    display: none;
+  }
+
+  .team-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: baseline;
+    width: fit-content;
+    justify-content: center;
+    gap: 1rem;
+  }
+  .team-item {
+    height: fit-content;
+    width: 200px;
+    flex: 0 0 auto;
+  }
+
+  .bottom-section {
+    width: fit-content;
+    flex-direction: column;
+    border-left: 1px solid var(--color-border-hover);
+    border-top: none;
+    margin-left: 1rem;
+  }
+  .bottom-section button {
+    height: fit-content;
+    margin: 1rem;
+  }
 }
 </style>

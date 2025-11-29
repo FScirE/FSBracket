@@ -4,6 +4,7 @@ import { ref } from 'vue'
 /* global variables */
 //
 
+export const windowWidth = ref<number>(window.innerWidth)
 export const ZOOM_SENS = 1.10
 export const STICK_RANGE = 12 // threshold for snapping in px (screen)
 export const MATCH_GAP = 54 // default gap for matches in px (local), for snapping

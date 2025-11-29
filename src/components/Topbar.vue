@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { windowWidth } from '@/assets/global'
 
 const theme = ref<string>('')
 
@@ -22,11 +23,11 @@ function toggleTheme() {
 </script>
 
 <template>
-<div class="topbar">
+<div class="topbar p-4">
   <div>
     <button class="collapse-button btn btn-primary ms-4" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-sidebar" aria-expanded="true" aria-controls="collapse-sidebar">
       <span class="visually-hidden">Open sidebar</span>
-      <i class="pi pi-chevron-left fs-4 p-1"></i>
+      <i class="pi fs-4 p-1" :class="windowWidth > 800 ? 'pi-chevron-left' : 'pi-chevron-up'"></i>
     </button>
   </div>
   <div class="d-flex gap-4">
@@ -50,8 +51,6 @@ function toggleTheme() {
   justify-content: space-between;
   align-items: center;
   gap: 2rem;
-  padding: 1.5rem;
-  line-height: 1.5;
   width: 100%;
   background-color: var(--color-background-mute);
   box-shadow: 0 -5px 8px -6px inset var(--color-border);

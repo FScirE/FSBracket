@@ -155,3 +155,29 @@ input:focus {
   border: 1px solid var(--purple-primary) !important;
   box-shadow: 0 0 0 1px var(--purple-primary) !important;
 }
+
+/* override bootstrap font sizing */
+h1, .h1 {
+  font-size: 2.5rem;
+}
+h2, .h2 {
+  font-size: 2rem;
+}
+h3, .h3 {
+  font-size: 1.75rem;
+}
+h4, .h4 {
+  font-size: 1.5rem;
+}
+.fs-1 {
+  font-size: 2.5rem !important;
+}
+.fs-2 {
+  font-size: 2rem !important;
+}
+.fs-3 {
+  font-size: 1.75rem !important;
+}
+.fs-4 {
+  font-size: 1.5rem !important;
+}

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import Sidebar from './components/Sidebar.vue';
-import Topbar from './components/Topbar.vue';
-import MainArea from './components/MainArea.vue'
+import Sidebar from '@/components/Sidebar.vue';
+import Topbar from '@/components/Topbar.vue';
+import MainArea from '@/components/MainArea.vue'
 import { onMounted } from 'vue';
+import { windowWidth } from './assets/global';
 
 onMounted(() => {
   const theme = localStorage.getItem('theme')
@@ -10,6 +11,10 @@ onMounted(() => {
     localStorage.setItem('theme', 'dark')
     location.reload()
   }
+
+  window.addEventListener("resize", () => {
+    windowWidth.value = window.innerWidth
+  })
 })
 </script>
 
@@ -47,4 +52,9 @@ main {
   min-height: 0;
 }
 
+@media (max-width: 800px) {
+  main {
+    flex-direction: column;
+  }
+}
 </style>
