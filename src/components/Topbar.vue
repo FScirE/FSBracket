@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { windowWidth } from '@/assets/global'
+import * as htmlToImage from 'html-to-image'
 
 const theme = ref<string>('')
 
@@ -20,6 +21,23 @@ function toggleTheme() {
   localStorage.setItem('theme', next)
   theme.value = next
 }
+
+function downloadAsImage() {
+  var node = document.getElementById('canvas');
+  if (!node)
+    return
+
+  htmlToImage.toPng(node!)
+    .then(function (dataUrl) {
+      var link = document.createElement('a');
+      link.download = 'bracket.png';
+      link.href = dataUrl;
+      link.click();
+    })
+    .catch(function (error: Error) {
+      console.error('Oops, something went wrong!', error);
+    })
+}
 </script>
 
 <template>
@@ -36,8 +54,12 @@ function toggleTheme() {
       FSBracket
     </h1>
   </div>
-  <div>
-    <button class="btn btn-primary me-4" type="button" @click="toggleTheme()">
+  <div class="d-flex gap-3">
+    <button class="btn btn-primary me-4" type="button" @click="downloadAsImage">
+      <span class="visually-hidden">Download image</span>
+      <i class="pi pi-image fs-4 p-1"></i>
+    </button>
+    <button class="btn btn-primary me-4" type="button" @click="toggleTheme">
       <span class="visually-hidden">Toggle theme</span>
       <i class="pi fs-4 p-1" :class="(theme === 'dark') ? 'pi-moon' : 'pi-sun'"></i>
     </button>

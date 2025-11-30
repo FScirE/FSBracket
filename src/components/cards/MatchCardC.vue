@@ -121,12 +121,10 @@ function stopDragCard() {
     <TeamCardC
       :team="team1!"
       v-model:score="match.team1.score"
-      :key="match.team1.score"
     />
     <TeamCardC
       :team="team2!"
       v-model:score="match.team2.score"
-      :key="match.team2.score"
     />
   </div>
   <!-- edit button -->

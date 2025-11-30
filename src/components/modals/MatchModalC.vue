@@ -12,8 +12,8 @@ const props = defineProps<{
 const matchModalElement = ref<HTMLElement | null>(null)
 
 const match = computed(() => matchList.value[getMatchIndexById(props.matchId)])
-const team1 = ref<Team | null>()
-const team2 = ref<Team | null>()
+const team1 = ref<Team | null>(null)
+const team2 = ref<Team | null>(null)
 const score1 = ref<number>(0)
 const score2 = ref<number>(0)
 
@@ -48,9 +48,10 @@ onMounted(() => {
   })
 })
 
+// update values so that they are correct when modal is shown
 watch(shown, () => {
-  team1.value = match.value ? getTeamFromSource(match.value.team1.source) : null
-  team2.value = match.value ? getTeamFromSource(match.value.team2.source) : null
+  team1.value = match.value ? getTeamFromSource(match.value.team1.source)! : null
+  team2.value = match.value ? getTeamFromSource(match.value.team2.source)! : null
   score1.value = match.value ? match.value.team1.score : 0
   score2.value = match.value ? match.value.team2.score : 0
 })
@@ -68,12 +69,11 @@ watch(shown, () => {
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <form class="d-flex flex-column" id="match-form" @submit.prevent="editMatch">
-            <div class="d-flex flex-column modal-body align-self-center w-75 my-2" v-if="match">
+            <div class="d-flex flex-column modal-body align-self-center w-75 my-2">
               <div class="team-info" >
                 <TeamCardC
                   :team="team1!"
                   v-model:score="score1"
-                  :key="match.team1.score"
                 />
               </div>
               <h5 class="align-self-center my-2">vs</h5>
@@ -81,7 +81,6 @@ watch(shown, () => {
                 <TeamCardC
                   :team="team2!"
                   v-model:score="score2"
-                  :key="match.team2.score"
                 />
               </div>
             </div>
@@ -106,5 +105,9 @@ watch(shown, () => {
 .team-info {
   border-radius: 0.5rem;
   overflow: hidden;
+}
+:deep(.team-info img) {
+  border-bottom-left-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
 }
 </style>

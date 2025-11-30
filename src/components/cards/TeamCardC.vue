@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import type { Team } from '@/assets/global';
 
 const props = withDefaults(defineProps<{
@@ -30,6 +30,11 @@ function handleInput() {
     emit('update:score', num)
   }
 }
+
+// keep score up to date when changed externally
+watch(props, () => {
+  input.value = props.score ?? 0
+})
 </script>
 
 <template>

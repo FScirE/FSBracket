@@ -44,16 +44,16 @@ onMounted(() => {
 <div class="button-holder">
   <button
     type="button"
-    class="remove-button btn"
+    class="first-button btn"
     :class="[
       `btn-${color1}`,
-       { [`text-${color1}`] : confirm }
+      { [`text-${color1}`] : confirm }
     ]"
     @click.prevent="onFirstClick">{{ text1 }}</button
   >
   <button
     type="button"
-    class="confirm-remove-button btn"
+    class="confirm-button btn"
     :class="[
       `btn-${color2}`,
       { ['w-100'] : confirm }
@@ -70,7 +70,7 @@ onMounted(() => {
   overflow: hidden;
   border-radius: 0.25rem;
 }
-.confirm-remove-button {
+.confirm-button {
   position: absolute;
   overflow: hidden;
   width: 0;

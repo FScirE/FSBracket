@@ -22,8 +22,11 @@ const name = ref<string>("")
 const imageUrl = ref<string>("")
 
 const shown = ref<boolean>(false)
+const errorMessage = ref<string>("")
 
 function onSubmit() {
+  if (!teamModalElement.value)
+    return
   if (props.mode === "add")
     addTeam()
   else
@@ -31,17 +34,26 @@ function onSubmit() {
 }
 
 function addTeam() {
-  teamList.value.push({
-    id: makeId("t"),
-    name: name.value,
-    imageUrl: imageUrl.value
-  })
+  if (teamList.value.some(t => t.name === name.value)) {
+    errorMessage.value = "Team name already in use!"
+  }
+  else {
+    teamList.value.push({
+      id: makeId("t"),
+      name: name.value,
+      imageUrl: imageUrl.value
+    })
+    const modal = Modal.getInstance(teamModalElement.value!)
+    modal!.hide()
+  }
 }
 function editTeam() {
   if (team.value) {
     team.value.name = name.value
     team.value.imageUrl = imageUrl.value
   }
+  const modal = Modal.getInstance(teamModalElement.value!)
+  modal!.hide()
 }
 function removeTeam() {
   if (!teamModalElement.value)
@@ -66,9 +78,11 @@ onMounted(() => {
   })
 })
 
+// update values so that they are correct when modal is shown
 watch(shown, () => {
   name.value = team.value ? team.value.name : "Example"
   imageUrl.value = team.value ? team.value.imageUrl : "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/LEGO_logo.svg/768px-LEGO_logo.svg.png"
+  errorMessage.value = ""
 })
 </script>
 
@@ -86,12 +100,12 @@ watch(shown, () => {
           <form class="d-flex flex-column" id="team-form" @submit.prevent="onSubmit">
             <div class="modal-body align-self-center w-75">
               <div class="mb-3">
-                <label class="form-label">Name</label>
-                <input class="form-control" v-model="name" maxlength="32" />
+                <label class="form-label d-flex justify-content-between"><span>Name</span><span class="text-danger">{{ errorMessage }}</span></label>
+                <input class="form-control" id="name-input" v-model="name" @input="errorMessage = ''" maxlength="32" />
               </div>
               <div class="mb-3">
                 <label class="form-label">Image URL</label>
-                <input class="form-control" v-model="imageUrl" />
+                <input class="form-control" id="image-url-input" v-model="imageUrl" />
               </div>
             </div>
             <div class="modal-footer">
@@ -103,7 +117,7 @@ watch(shown, () => {
                 type="right"
                 :callback="removeTeam"
               />
-              <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Confirm</button>
+              <button type="submit" class="btn btn-primary">Confirm</button>
             </div>
           </form>
         </div>

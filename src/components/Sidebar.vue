@@ -177,6 +177,10 @@ function addMatch() {
 .selected-team {
   border: 2px solid var(--purple-primary);
 }
+:deep(.team-item-card img) {
+  border-bottom-left-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+}
 
 .edit-team-button {
   position: absolute;

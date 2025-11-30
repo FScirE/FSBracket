@@ -95,6 +95,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.sidebar,
+.topbar,
+.mainarea {
+  transition: background-color 0.1s ease;
+}
+
 /* minimal scrollbar (global) */
 * {
   scrollbar-width: thin;
