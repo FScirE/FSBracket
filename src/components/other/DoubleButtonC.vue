@@ -5,8 +5,8 @@ const props = withDefaults(defineProps<{
   text1: string,
   text2: string,
   type?: "left" | "center" | "right",
-  color1?: "primary" | "secondary" | "warning" | "danger" | "success" | "info",
-  color2?: "primary" | "secondary" | "warning" | "danger" | "success" | "info",
+  color1?: "primary" | "secondary" | "warning" | "danger" | "success" | "info" | "subtle",
+  color2?: "primary" | "secondary" | "warning" | "danger" | "success" | "info" | "subtle",
   callback?: () => void
 }>(), {
   type: "center",
@@ -36,7 +36,7 @@ onMounted(() => {
   else if (props.type === "center")
     style.value = { left: "50%", transform: "translateX(-50%)" }
   else
-    style.value = { left: "100%", transform: "translateX(-100%)" }
+    style.value = { right: "0" }
 })
 </script>
 

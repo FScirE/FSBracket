@@ -2,13 +2,18 @@
 import { ref, computed } from 'vue'
 import { getTeamFromSource, teamList, STICK_RANGE, MATCH_GAP, type Match } from '@/assets/global';
 import TeamCardC from '@/components/cards/TeamCardC.vue';
+import DoubleButtonC from '../other/DoubleButtonC.vue';
 
 const props = defineProps<{
   match: Match,
   scale: number
 }>()
 
-const isDragging = ref(false)
+const emit = defineEmits<{
+  (e: "match:edit", value: void): void
+}>()
+
+const isDragging = ref<boolean>(false)
 const cardRef = ref<HTMLElement | null>(null)
 const dragStartX = ref<number>(0)
 const dragStartY = ref<number>(0)
@@ -20,7 +25,7 @@ function startDragCard(event: MouseEvent) {
   event.stopPropagation() // hinder area drag
   isDragging.value = true
 
-  const canvas = cardRef.value?.parentElement
+  const canvas = document.getElementById("canvas")
   if (!canvas)
     return
   const canvasRect = canvas.getBoundingClientRect()
@@ -44,7 +49,7 @@ function handleMouseMove(event: MouseEvent) {
   if (!isDragging.value)
     return
 
-  const canvas = cardRef.value!.parentElement
+  const canvas = document.getElementById("canvas")
   if (!canvas)
     return
   const canvasRect = canvas.getBoundingClientRect()
@@ -57,7 +62,7 @@ function handleMouseMove(event: MouseEvent) {
   let tempY = pointerLocalY - dragStartY.value
 
   // snap to other cards
-  const others = canvas.querySelectorAll('.match-card-holder')
+  const others = canvas.querySelectorAll(".match-card")
   others.forEach(e => {
     if (e === cardRef.value)
       return
@@ -103,44 +108,74 @@ function stopDragCard() {
 
 <template>
 <div
-  class="match-card-holder"
+  class="match-card"
   ref="cardRef"
   :style="{ transform: `translate(${props.match.posX}px, ${props.match.posY}px)` }"
   @mousedown="startDragCard"
 >
+  <!-- teams in match -->
   <div
-    class="match-card"
+    class="team-cards"
     :id="match.id"
   >
     <TeamCardC
       :team="team1!"
       v-model:score="match.team1.score"
+      :key="match.team1.score"
     />
     <TeamCardC
       :team="team2!"
       v-model:score="match.team2.score"
+      :key="match.team2.score"
     />
   </div>
-  <button
+  <!-- edit button -->
+  <div
+    class="popup popup-left"
     :style="{ '--scale': props.scale }"
-    class="btn btn-sm connect-button"
-    tabindex="-1"
-    @mousedown.stop=""
   >
-    <i class="pi pi-plus"></i>
-  </button>
+    <button
+      class="btn btn-primary"
+      tabindex="-1"
+      @mousedown.stop=""
+      @click.stop="emit('match:edit')"
+    >
+      <i class="pi pi-pencil"></i>
+    </button>
+  </div>
+  <!-- forward winner/loser buttons -->
+  <div
+    class="popup popup-right"
+    :style="{ '--scale': props.scale }"
+  >
+    <button
+      class="btn btn-success "
+      tabindex="-1"
+      @mousedown.stop=""
+    >
+      <i class="pi pi-trophy"></i>
+    </button>
+    <button
+      class="btn btn-secondary"
+      tabindex="-1"
+      @mousedown.stop=""
+    >
+      <span>
+        <h5 class="mb-0">L</h5>
+      </span>
+    </button>
+  </div>
 </div>
-
 </template>
 
 <style scoped>
-.match-card-holder {
+.match-card {
   height: auto;
   width: 16rem;
   position: absolute;
 }
 
-.match-card {
+.team-cards {
   position: relative;
   left: 0;
   top: 0;
@@ -152,24 +187,36 @@ function stopDragCard() {
   z-index: 10;
 }
 
-.connect-button {
-  position: absolute;
-  overflow: hidden;
+/* popup button styling */
+.popup-right {
+  right: -1px;
+  transform-origin: left;
+  transform: translate(100%, -50%) scale(calc(1 / var(--scale)));
+  align-items: start;
+}
+.popup-left {
   left: -1px;
-  top: 50%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  width: 0;
-  padding: 0;
   transform-origin: right;
   transform: translate(-100%, -50%) scale(calc(1 / var(--scale)));
-  background-color: var(--transparent-gray);
-  color: var(--color-text);
+  align-items: end;
 }
-.connect-button:hover {
-  filter: brightness(1.5)
-}
-.match-card-holder:hover > .connect-button {
+.popup {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+  top: 50%;
+  height: fit-content;
   width: 2.5rem;
+}
+.popup button {
+  width: 0;
+  aspect-ratio: 1;
+  padding: 0;
+  overflow: hidden;
+}
+.match-card:hover > .popup button {
+  width: 100%;
 }
 </style>

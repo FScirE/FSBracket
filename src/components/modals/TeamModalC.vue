@@ -11,7 +11,7 @@ const props = defineProps<{
   teamId?: string
 }>()
 
-const modalElement = ref<HTMLElement | null>(null)
+const teamModalElement = ref<HTMLElement | null>(null)
 
 const team =  computed(() => {
   if (props.mode === "add" || !props.teamId)
@@ -44,9 +44,9 @@ function editTeam() {
   }
 }
 function removeTeam() {
-  if (!modalElement.value)
+  if (!teamModalElement.value)
     return
-  const modal = Modal.getInstance(modalElement.value)
+  const modal = Modal.getInstance(teamModalElement.value)
   if (!team.value)
     return
   removeTeamById(team.value.id)
@@ -74,7 +74,7 @@ watch(shown, () => {
 
 <template>
   <teleport to="body">
-    <div class="modal fade" id="team-modal" tabindex="-1" aria-labelledby="team-modal-label" aria-hidden="true" ref="modalElement">
+    <div class="modal fade" id="team-modal" tabindex="-1" aria-labelledby="team-modal-label" aria-hidden="true" ref="teamModalElement">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">

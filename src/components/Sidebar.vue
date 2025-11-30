@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { teamList, matchList, type Team, makeId, windowWidth } from '@/assets/global';
+import { teamList, matchList, type Team, makeId, windowWidth, type TeamSource } from '@/assets/global';
 import TeamCardC from '@/components/cards/TeamCardC.vue';
 import TeamModalC from '@/components/modals/TeamModalC.vue';
 import { Modal } from 'bootstrap'
@@ -41,20 +41,45 @@ function openTeamAdd() {
 }
 
 function addMatch() {
-  if (!selectedTeams.value[0] || !selectedTeams.value[1])
-    return
+  let team1: {
+    source: TeamSource,
+    score: number
+  }
+  let team2: typeof team1
+
+  // set team 1
+  if (!selectedTeams.value[0]) {
+    team1 = {
+      source: { type: "none" },
+      score: 0
+    }
+  }
+  else {
+    team1 = {
+      source: { type: "team", teamId: selectedTeams.value[0].id },
+      score: 0
+    }
+  }
+  // set team 2
+  if (!selectedTeams.value[1]) {
+    team2 = {
+      source: { type: "none" },
+      score: 0
+    }
+  }
+  else {
+    team2 = {
+      source: { type: "team", teamId: selectedTeams.value[1].id },
+      score: 0
+    }
+  }
+
   matchList.value.push({
     id: makeId("m"),
     posX: 0,
     posY: 0,
-    team1: {
-      source: { type: "team", teamId: selectedTeams.value[0].id },
-      score: 0
-    },
-    team2: {
-      source: { type: "team", teamId: selectedTeams.value[1].id },
-      score: 0
-    }
+    team1: team1,
+    team2: team2
   })
   selectedTeams.value = []
 }
@@ -98,7 +123,10 @@ function addMatch() {
         <i class="pi pi-plus"></i>
         <span class="ms-2">Team</span>
       </button>
-      <button class="btn btn-primary p-2" type="button" :disabled="selectedTeams.length < 2" @click="addMatch">
+      <button
+        class="btn btn-primary p-2" type="button"
+        @click="addMatch"
+      >
         <i class="pi pi-plus"></i>
         <span class="ms-2">Match</span>
       </button>

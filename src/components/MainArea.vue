@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { teamList, matchList, ZOOM_SENS } from '@/assets/global'
+import { teamList, matchList, ZOOM_SENS, type Match } from '@/assets/global'
 import MatchCardC from '@/components/cards/MatchCardC.vue'
+import MatchModalC from './modals/MatchModalC.vue'
+import { Modal } from 'bootstrap'
 
 const mainAreaRef = ref<HTMLElement | null>(null)
 const isDraggingArea = ref<boolean>(false)
@@ -10,6 +12,8 @@ const dragStartX = ref<number>(0)
 const offsetX = ref<number>(0)
 const offsetY = ref<number>(0)
 const scale = ref<number>(1)
+
+const selectedMatchId = ref<string>("")
 
 function startDragArea(event: MouseEvent) {
   isDraggingArea.value = true
@@ -59,6 +63,17 @@ function handleZoomArea(event: WheelEvent) {
 
   scale.value = newScale
 }
+
+function openMatchModal(match: Match) {
+  selectedMatchId.value = match.id
+  const element = document.getElementById("match-modal")
+  if (!element)
+    return
+  const modal = Modal.getOrCreateInstance(element)
+  if (!modal)
+    return
+  modal.show()
+}
 </script>
 
 <template>
@@ -73,6 +88,7 @@ function handleZoomArea(event: WheelEvent) {
 >
   <div
     class="canvas"
+    id="canvas"
     :style="{transform: `translate(${offsetX}px, ${offsetY}px) scale(${scale})`}"
   >
     <MatchCardC
@@ -80,9 +96,13 @@ function handleZoomArea(event: WheelEvent) {
       :key="index"
       :match="match"
       :scale="scale"
+      @match:edit="openMatchModal(match)"
     />
   </div>
 </div>
+<MatchModalC
+ :match-id="selectedMatchId"
+/>
 </template>
 
 <style scoped>

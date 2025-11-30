@@ -101,6 +101,7 @@ function handleInput() {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   height: 100%;
   width: 2.1rem;
   margin-left: 1px;
@@ -112,7 +113,6 @@ function handleInput() {
   text-align: center;
   cursor: text;
   width: 100%;
-  margin: 0;
 }
 .team-score input::-webkit-outer-spin-button,
 .team-score input::-webkit-inner-spin-button {
