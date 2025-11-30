@@ -116,7 +116,7 @@ function addMatch() {
   display: flex;
   flex-direction: column;
   text-align: center;
-  width: 280px;
+  width: 300px;
   height: 100%;
   background-color: var(--color-background-soft);
 }
@@ -160,7 +160,7 @@ function addMatch() {
   border-radius: 0;
 }
 .team-item-card:hover > .edit-team-button {
-  width: 2.1rem; /* same as score width */
+  width: 2.5rem;
 }
 
 .bottom-section {
@@ -178,8 +178,7 @@ function addMatch() {
 @media (max-width: 800px) {
   .sidebar {
     width: 100%;
-    height: 200px;
-    flex-direction: row;
+    height: 400px;
     border-bottom: 1px solid var(--color-border);
   }
   .sidebar h2 {
@@ -187,29 +186,16 @@ function addMatch() {
   }
 
   .team-list {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-content: baseline;
-    width: fit-content;
-    justify-content: center;
-    gap: 1rem;
+    align-items: center;
   }
   .team-item {
     height: fit-content;
-    width: 200px;
+    width: 280px;
     flex: 0 0 auto;
   }
 
-  .bottom-section {
-    width: fit-content;
-    flex-direction: column;
-    border-left: 1px solid var(--color-border-hover);
-    border-top: none;
-    margin-left: 1rem;
-  }
-  .bottom-section button {
-    height: fit-content;
-    margin: 1rem;
+  .team-item-card:hover > .edit-team-button {
+    width: 3rem;
   }
 }
 </style>

@@ -57,7 +57,7 @@ function handleMouseMove(event: MouseEvent) {
   let tempY = pointerLocalY - dragStartY.value
 
   // snap to other cards
-  const others = canvas.querySelectorAll('.match-card')
+  const others = canvas.querySelectorAll('.match-card-holder')
   others.forEach(e => {
     if (e === cardRef.value)
       return
@@ -103,33 +103,73 @@ function stopDragCard() {
 
 <template>
 <div
-  class="match-card"
-  :id="match.id"
+  class="match-card-holder"
   ref="cardRef"
   :style="{ transform: `translate(${props.match.posX}px, ${props.match.posY}px)` }"
   @mousedown="startDragCard"
 >
-  <TeamCardC
-    :team="team1!"
-    v-model:score="match.team1.score"
-  />
-  <TeamCardC
-    :team="team2!"
-    v-model:score="match.team2.score"
-  />
+  <div
+    class="match-card"
+    :id="match.id"
+  >
+    <TeamCardC
+      :team="team1!"
+      v-model:score="match.team1.score"
+    />
+    <TeamCardC
+      :team="team2!"
+      v-model:score="match.team2.score"
+    />
+  </div>
+  <button
+    :style="{ '--scale': props.scale }"
+    class="btn btn-sm connect-button"
+    tabindex="-1"
+    @mousedown.stop=""
+  >
+    <i class="pi pi-plus"></i>
+  </button>
 </div>
+
 </template>
 
 <style scoped>
-.match-card {
-  position: absolute;
+.match-card-holder {
   height: auto;
   width: 16rem;
+  position: absolute;
+}
+
+.match-card {
+  position: relative;
+  left: 0;
+  top: 0;
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   gap: 1px;
   z-index: 10;
+}
+
+.connect-button {
+  position: absolute;
+  overflow: hidden;
+  left: -1px;
+  top: 50%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  width: 0;
+  padding: 0;
+  transform-origin: right;
+  transform: translate(-100%, -50%) scale(calc(1 / var(--scale)));
+  background-color: var(--transparent-gray);
+  color: var(--color-text);
+}
+.connect-button:hover {
+  filter: brightness(1.5)
+}
+.match-card-holder:hover > .connect-button {
+  width: 2.5rem;
 }
 </style>

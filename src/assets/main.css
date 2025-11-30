@@ -23,6 +23,8 @@
   --purple-light: #8556dc;
   --white-dark: #e2e2e2;
   --black-dark: #000;
+
+  --transparent-gray: rgba(90, 90, 90, 0.25);
 }
 
 /* semantic color variables for this project */
