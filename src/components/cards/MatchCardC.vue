@@ -6,11 +6,14 @@ import DoubleButtonC from '../other/DoubleButtonC.vue';
 
 const props = defineProps<{
   match: Match,
-  scale: number
+  scale: number,
+  sending: boolean
 }>()
 
 const emit = defineEmits<{
-  (e: "match:edit", value: void): void
+  (e: "match:edit", value: void): void,
+  (e: "match:send", value: "winner" | "loser"): void,
+  (e: "match:click", value: void): void
 }>()
 
 const isDragging = ref<boolean>(false)
@@ -23,6 +26,10 @@ const team2 = computed(() => getTeamFromSource(props.match.team2.source))
 
 function startDragCard(event: MouseEvent) {
   event.stopPropagation() // hinder area drag
+
+  if (props.sending) // dont drag if in "sending" mode
+    return
+
   isDragging.value = true
 
   const canvas = document.getElementById("canvas")
@@ -104,14 +111,22 @@ function stopDragCard() {
   window.removeEventListener('mousemove', handleMouseMove)
   window.removeEventListener('mouseup', stopDragCard)
 }
+
+function onMatchClick() {
+  // emit only when in "sending" mode
+  if (props.sending)
+    emit("match:click")
+}
 </script>
 
 <template>
 <div
   class="match-card"
+  :class="{ 'sending-mode' : sending }"
   ref="cardRef"
   :style="{ transform: `translate(${props.match.posX}px, ${props.match.posY}px)` }"
   @mousedown="startDragCard"
+  @click="onMatchClick"
 >
   <!-- teams in match -->
   <div
@@ -134,10 +149,13 @@ function stopDragCard() {
   >
     <button
       class="btn btn-primary"
+      type="button"
+      title="Edit match"
       tabindex="-1"
       @mousedown.stop=""
       @click.stop="emit('match:edit')"
     >
+      <span class="visually-hidden">Edit match</span>
       <i class="pi pi-pencil"></i>
     </button>
   </div>
@@ -147,18 +165,26 @@ function stopDragCard() {
     :style="{ '--scale': props.scale }"
   >
     <button
-      class="btn btn-success "
+      class="btn btn-success"
+      type="button"
+      title="Send winner to..."
       tabindex="-1"
       @mousedown.stop=""
+      @click.stop="emit('match:send', 'winner')"
     >
+      <span class="visually-hidden">Send winner to...</span>
       <i class="pi pi-trophy"></i>
     </button>
     <button
       class="btn btn-secondary"
+      type="button"
+      title="Send loser to..."
       tabindex="-1"
       @mousedown.stop=""
+      @click.stop="emit('match:send', 'loser')"
     >
       <span>
+        <span class="visually-hidden">Send loser to...</span>
         <h5 class="mb-0">L</h5>
       </span>
     </button>
@@ -183,6 +209,10 @@ function stopDragCard() {
   overflow: hidden;
   gap: 1px;
   z-index: 10;
+}
+.match-card.sending-mode:hover .team-cards {
+  cursor: pointer;
+  box-shadow: 0 0 0 2px var(--purple-primary);
 }
 
 /* popup button styling */
@@ -214,7 +244,7 @@ function stopDragCard() {
   padding: 0;
   overflow: hidden;
 }
-.match-card:hover > .popup button {
+.match-card:not(.sending-mode):hover > .popup button {
   width: 100%;
 }
 </style>

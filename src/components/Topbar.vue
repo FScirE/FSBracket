@@ -43,8 +43,15 @@ function downloadAsImage() {
 <template>
 <div class="topbar p-4">
   <div>
-    <button class="collapse-button btn btn-primary ms-4" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-sidebar" aria-expanded="true" aria-controls="collapse-sidebar">
-      <span class="visually-hidden">Open sidebar</span>
+    <button
+      class="collapse-button btn btn-primary ms-4"
+      type="button" data-bs-toggle="collapse"
+      data-bs-target="#collapse-sidebar"
+      aria-expanded="true"
+      aria-controls="collapse-sidebar"
+      title="Toggle sidebar"
+    >
+      <span class="visually-hidden">Toggle sidebar</span>
       <i class="pi fs-4 p-1" :class="windowWidth > 800 ? 'pi-chevron-left' : 'pi-chevron-up'"></i>
     </button>
   </div>
@@ -55,11 +62,11 @@ function downloadAsImage() {
     </h1>
   </div>
   <div class="d-flex gap-3">
-    <button class="btn btn-primary me-4" type="button" @click="downloadAsImage">
+    <button class="btn btn-primary me-4" type="button" @click="downloadAsImage" title="Download as image">
       <span class="visually-hidden">Download image</span>
       <i class="pi pi-image fs-4 p-1"></i>
     </button>
-    <button class="btn btn-primary me-4" type="button" @click="toggleTheme">
+    <button class="btn btn-primary me-4" type="button" @click="toggleTheme" title="Toggle theme">
       <span class="visually-hidden">Toggle theme</span>
       <i class="pi fs-4 p-1" :class="(theme === 'dark') ? 'pi-moon' : 'pi-sun'"></i>
     </button>

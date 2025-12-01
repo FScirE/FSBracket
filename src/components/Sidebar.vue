@@ -106,10 +106,11 @@ function addMatch() {
           <button
             class="edit-team-button btn btn-primary"
             type="button"
+            title="Edit team"
             @click.stop="openTeamEdit(team)"
             tabindex="-1"
           >
-            <span class="visually-hidden">Edit</span>
+            <span class="visually-hidden">Edit team</span>
             <i class="pi pi-pencil mx-1"></i>
           </button>
         </div>
@@ -169,13 +170,13 @@ function addMatch() {
   position: relative;
   overflow: hidden;
   border-radius: 0.5rem;
-  border: 2px solid transparent;
+  margin-top: 2px;
 }
 .team-item-card:hover {
   cursor: pointer;
 }
 .selected-team {
-  border: 2px solid var(--purple-primary);
+  box-shadow: 0 0 0 2px var(--purple-primary);
 }
 :deep(.team-item-card img) {
   border-bottom-left-radius: 0.5rem;

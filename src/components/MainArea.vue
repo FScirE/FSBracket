@@ -15,6 +15,10 @@ const scale = ref<number>(1)
 
 const selectedMatchId = ref<string>("")
 
+const sendFrom = ref<Match | null>(null)
+const sendTo = ref<Match | null>(null)
+const sending = ref<boolean>(false)
+
 function startDragArea(event: MouseEvent) {
   isDraggingArea.value = true
   dragStartX.value = event.clientX - offsetX.value
@@ -74,6 +78,21 @@ function openMatchModal(match: Match) {
     return
   modal.show()
 }
+
+// enables "sending" mode, and sets which match has its result sent from
+function startSend(which: "winner" | "loser", match: Match) {
+  sending.value = true
+  sendFrom.value = match
+  sendTo.value = null
+  console.log(`Sending ${which} of ${match.id}`)
+}
+
+// disabled "sending" mode, and adds the match sent from as a source to the match sent to
+function finishSend(match: Match | null) {
+  console.log(`Sending to ${match?.id}`)
+  sendTo.value = match
+  sending.value = false
+}
 </script>
 
 <template>
@@ -96,7 +115,10 @@ function openMatchModal(match: Match) {
       :key="index"
       :match="match"
       :scale="scale"
+      :sending="sending"
       @match:edit="openMatchModal(match)"
+      @match:send="(which) => startSend(which, match)"
+      @match:click="finishSend(match)"
     />
   </div>
 </div>
