@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { teamList, matchList, type Team, makeId, windowWidth, type TeamSource } from '@/assets/global';
+import { teamList, matchList, makeId, windowWidth } from '@/assets/global';
+import type { Team, TeamSource } from '@/assets/types';
 import TeamCardC from '@/components/cards/TeamCardC.vue';
 import TeamModalC from '@/components/modals/TeamModalC.vue';
 import { Modal } from 'bootstrap'

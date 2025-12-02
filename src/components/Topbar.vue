@@ -3,6 +3,10 @@ import { onMounted, ref } from 'vue'
 import { windowWidth } from '@/assets/global'
 import * as htmlToImage from 'html-to-image'
 
+defineProps<{
+  saveStatus: string
+}>()
+
 const theme = ref<string>('')
 
 onMounted(() => {
@@ -42,7 +46,7 @@ function downloadAsImage() {
 
 <template>
 <div class="topbar p-4">
-  <div>
+  <div class="d-flex gap-4">
     <button
       class="collapse-button btn btn-primary ms-4"
       type="button" data-bs-toggle="collapse"
@@ -54,6 +58,9 @@ function downloadAsImage() {
       <span class="visually-hidden">Toggle sidebar</span>
       <i class="pi fs-4 p-1" :class="windowWidth > 800 ? 'pi-chevron-left' : 'pi-chevron-up'"></i>
     </button>
+    <div class="save-status">
+      <span>{{ saveStatus }}</span>
+    </div>
   </div>
   <div class="d-flex gap-4">
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="50" height="50" />
@@ -61,8 +68,8 @@ function downloadAsImage() {
       FSBracket
     </h1>
   </div>
-  <div class="d-flex gap-3">
-    <button class="btn btn-primary me-4" type="button" @click="downloadAsImage" title="Download as image">
+  <div class="d-flex gap-4">
+    <button class="btn btn-primary" type="button" @click="downloadAsImage" title="Download as image">
       <span class="visually-hidden">Download image</span>
       <i class="pi pi-image fs-4 p-1"></i>
     </button>
@@ -96,5 +103,20 @@ button {
 }
 .collapse-button.collapsed i {
   transform: rotate(180deg);
+}
+
+.save-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-border);
+  border-radius: 0.5rem;
+  width: 10rem;
+}
+
+@media (max-width: 800px) {
+  .save-status {
+    display: none;
+  }
 }
 </style>

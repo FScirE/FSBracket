@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { getTeamFromSource, teamList, STICK_RANGE, MATCH_GAP, type Match } from '@/assets/global';
+import { getTeamFromSource, STICK_RANGE, MATCH_GAP, isWinnerUsed, isLoserUsed } from '@/assets/global';
+import type { Match } from "@/assets/types"
 import TeamCardC from '@/components/cards/TeamCardC.vue';
 import DoubleButtonC from '../other/DoubleButtonC.vue';
 
@@ -23,6 +24,9 @@ const dragStartY = ref<number>(0)
 
 const team1 = computed(() => getTeamFromSource(props.match.team1.source))
 const team2 = computed(() => getTeamFromSource(props.match.team2.source))
+
+const winnerSent = computed(() => isWinnerUsed(props.match))
+const loserSent = computed(() => isLoserUsed(props.match))
 
 function startDragCard(event: MouseEvent) {
   event.stopPropagation() // hinder area drag
@@ -70,13 +74,13 @@ function handleMouseMove(event: MouseEvent) {
 
   // snap to other cards
   const others = canvas.querySelectorAll(".match-card")
-  others.forEach(e => {
-    if (e === cardRef.value)
+  others.forEach(o => {
+    if (o === cardRef.value)
       return
 
-    const r = e.getBoundingClientRect()
-    const otherX = (r.left - canvasRect.left) / props.scale
-    const otherY = (r.top - canvasRect.top) / props.scale
+    const rect = o.getBoundingClientRect()
+    const otherX = (rect.left - canvasRect.left) / props.scale
+    const otherY = (rect.top - canvasRect.top) / props.scale
 
     const snapRange = STICK_RANGE / props.scale
 
@@ -87,7 +91,7 @@ function handleMouseMove(event: MouseEvent) {
       tempY = otherY
 
     const thisHeight = cardRef.value!.getBoundingClientRect().height / props.scale
-    const otherHeight = r.height / props.scale
+    const otherHeight = rect.height / props.scale
 
     // snap to default gap (local)
     if (tempX === otherX) {
@@ -169,6 +173,7 @@ function onMatchClick() {
       type="button"
       title="Send winner to..."
       tabindex="-1"
+      :disabled="winnerSent"
       @mousedown.stop=""
       @click.stop="emit('match:send', 'winner')"
     >
@@ -180,6 +185,7 @@ function onMatchClick() {
       type="button"
       title="Send loser to..."
       tabindex="-1"
+      :disabled="loserSent"
       @mousedown.stop=""
       @click.stop="emit('match:send', 'loser')"
     >

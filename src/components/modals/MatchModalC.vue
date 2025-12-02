@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
-import { getMatchIndexById, removeMatchById, matchList, getTeamFromSource, type Team } from '@/assets/global';
+import { getMatchIndexById, removeMatchById, matchList, getTeamFromSource } from '@/assets/global';
+import type { Team } from "@/assets/types"
 import { Modal } from 'bootstrap';
 import DoubleButtonC from '@/components/other/DoubleButtonC.vue';
 import TeamCardC from '@/components/cards/TeamCardC.vue';

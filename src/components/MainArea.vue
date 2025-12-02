@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { teamList, matchList, ZOOM_SENS, type Match } from '@/assets/global'
+import { matchList, trySetSourceMatch, ZOOM_SENS } from '@/assets/global'
+import type { Match } from "@/assets/types"
 import MatchCardC from '@/components/cards/MatchCardC.vue'
 import MatchModalC from './modals/MatchModalC.vue'
 import { Modal } from 'bootstrap'
@@ -18,6 +19,7 @@ const selectedMatchId = ref<string>("")
 const sendFrom = ref<Match | null>(null)
 const sendTo = ref<Match | null>(null)
 const sending = ref<boolean>(false)
+const sendBracket = ref<"winner" | "loser">("winner")
 
 function startDragArea(event: MouseEvent) {
   isDraggingArea.value = true
@@ -82,16 +84,22 @@ function openMatchModal(match: Match) {
 // enables "sending" mode, and sets which match has its result sent from
 function startSend(which: "winner" | "loser", match: Match) {
   sending.value = true
+  sendBracket.value = which
   sendFrom.value = match
   sendTo.value = null
-  console.log(`Sending ${which} of ${match.id}`)
 }
 
 // disabled "sending" mode, and adds the match sent from as a source to the match sent to
 function finishSend(match: Match | null) {
-  console.log(`Sending to ${match?.id}`)
   sendTo.value = match
-  sending.value = false
+
+  if (sendTo.value === null || sendFrom.value === null)
+    sending.value = false
+  else {
+    const result = trySetSourceMatch(sendFrom.value, sendTo.value, sendBracket.value)
+    if (result) // keep selection active if not successful
+      sending.value = false
+  }
 }
 </script>
 
@@ -105,6 +113,15 @@ function finishSend(match: Match | null) {
   @mouseleave="stopDragArea"
   @wheel.prevent="handleZoomArea"
 >
+  <div
+    class="sending-status"
+    :class="{ 'is-sending' : sending }"
+  >
+    <span class="fs-5 ps-2 me-3">Send {{ sendBracket }} to match</span>
+    <button class="btn btn-primary px-3" @click="finishSend(null)">
+      <span>Cancel</span>
+    </button>
+  </div>
   <div
     class="canvas"
     id="canvas"
@@ -146,5 +163,27 @@ function finishSend(match: Match | null) {
   width: 100%;
   height: 100%;
   transition: transform 0.1s ease-out;
+}
+
+.sending-status {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  overflow: hidden;
+  width: fit-content;
+  height: 0;
+  margin-top: 2px;
+  background-color: var(--color-border-hover);
+  border-radius: 0.5rem;
+  transition: height 0.3s ease;
+}
+.sending-status button {
+  height: 100%;
+}
+.sending-status.is-sending {
+  height: 2.5rem;
+  z-index: 12;
 }
 </style>

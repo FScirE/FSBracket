@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
-import type { Team } from '@/assets/global';
+import type { Team } from '@/assets/types';
 
 const props = withDefaults(defineProps<{
   team: Team | null,

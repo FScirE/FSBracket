@@ -2,26 +2,53 @@
 import Sidebar from '@/components/Sidebar.vue';
 import Topbar from '@/components/Topbar.vue';
 import MainArea from '@/components/MainArea.vue'
-import { onMounted } from 'vue';
-import { windowWidth } from './assets/global';
+import { computed, onMounted, ref, watch } from 'vue';
+import { windowWidth } from '@/assets/global';
+import { teamList, matchList } from '@/assets/global';
+
+const timeoutId = ref<number | undefined>()
+const saveStatus = computed(() => timeoutId.value ? "Saving..." : "Changes saved" )
 
 onMounted(() => {
-  const theme = localStorage.getItem('theme')
+  // load theme from localStorage, or set default
+  const theme = localStorage.getItem("theme")
   if (!theme) {
-    localStorage.setItem('theme', 'dark')
+    localStorage.setItem("theme", "dark")
     location.reload()
   }
 
   window.addEventListener("resize", () => {
     windowWidth.value = window.innerWidth
   })
+
+  // load teams and matches from localStorage
+  const teams = localStorage.getItem("teams")
+  if (teams)
+    teamList.value = JSON.parse(teams)
+  const matches = localStorage.getItem("matches")
+  if (matches)
+    matchList.value = JSON.parse(matches)
+
+  // watch data to keep localStorage up to date
+  watch([teamList, matchList], () => {
+    clearTimeout(timeoutId.value)
+    timeoutId.value = setTimeout(() => {
+      localStorage.setItem("teams", JSON.stringify(teamList.value))
+      localStorage.setItem("matches", JSON.stringify(matchList.value))
+      // clear timeoutId
+      timeoutId.value = undefined
+    }, 1000)
+  }, { deep: true })
 })
+
 </script>
 
 <template>
 <div id="container">
   <header>
-    <Topbar />
+    <Topbar
+      :saveStatus="saveStatus"
+    />
   </header>
 
   <main>
