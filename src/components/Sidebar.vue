@@ -97,15 +97,16 @@ function addMatch() {
         :key="index"
       >
         <div
-          class="team-item-card"
+          class="team-item-card popin-holder"
           :class="{ 'selected-team' : selectedTeams.indexOf(team) != -1 }"
           @click.stop="onClickTeam(team)"
         >
           <TeamCardC
             :team="team"
+            :sourceType="undefined"
           />
           <button
-            class="edit-team-button btn btn-primary"
+            class="edit-team-button btn btn-primary popin popin-right"
             type="button"
             title="Edit team"
             @click.stop="openTeamEdit(team)"
@@ -168,7 +169,6 @@ function addMatch() {
 }
 
 .team-item-card {
-  position: relative;
   overflow: hidden;
   border-radius: 0.5rem;
   margin-top: 2px;
@@ -182,19 +182,6 @@ function addMatch() {
 :deep(.team-item-card img) {
   border-bottom-left-radius: 0.5rem;
   border-top-left-radius: 0.5rem;
-}
-
-.edit-team-button {
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
-  width: 0;
-  padding: 0;
-  border-radius: 0;
-}
-.team-item-card:hover > .edit-team-button {
-  width: 2.5rem;
 }
 
 .bottom-section {

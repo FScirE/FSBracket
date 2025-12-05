@@ -4,6 +4,7 @@ import type { Team } from '@/assets/types';
 
 const props = withDefaults(defineProps<{
   team: Team | null,
+  sourceType: "team" | "match" | "none" | undefined
   score?: number | null
 }>(), {
   score: null
@@ -42,7 +43,7 @@ watch(props, () => {
   <div class="team-image">
     <img :src="team.imageUrl" :alt="team.name" v-if="team"></img>
   </div>
-  <div class="team-name ps-2">
+  <div class="team-name ps-2" :class="{'team-source' : sourceType === 'team'}">
     <h5 v-if="team">{{ team.name }}</h5>
     <p class="fw-medium mb-0" v-else>TBD</p>
   </div>
@@ -100,6 +101,9 @@ watch(props, () => {
 }
 .team-name h5 {
   margin: 0;
+}
+.team-source {
+  /*background: linear-gradient(90deg, var(--color-border-hover) 0% 85%, var(--purple-primary) 100%);*/
 }
 
 .team-score {

@@ -22,8 +22,12 @@ const shown = ref<boolean>(false)
 
 function editMatch() {
   if (match.value) {
+    // update team 1
     match.value.team1.score = score1.value
+    match.value.team1.source = team1.value ? match.value.team1.source : { type: "none" }
+    // update team 2
     match.value.team2.score = score2.value
+    match.value.team2.source = team2.value ? match.value.team2.source : { type: "none" }
   }
 }
 function removeMatch() {
@@ -34,6 +38,18 @@ function removeMatch() {
     return
   removeMatchById(match.value.id)
   modal!.hide()
+}
+function removeSource(team: "team1" | "team2") {
+  if (!match.value || match.value[team].source.type === "none")
+    return
+  if (team === "team1") {
+    team1.value = null
+    score1.value = 0
+  }
+  else {
+    team2.value = null
+    score2.value = 0
+  }
 }
 
 onMounted(() => {
@@ -76,11 +92,15 @@ watch(shown, () => {
                   {{ (match?.team1.source.type[0]?.charAt(0).toUpperCase() ?? "-") + match?.team1.source.type.slice(1) }}
               </b></h5>
               <!-- team 1 card -->
-              <div class="team-info" >
+              <div class="team-info popin-holder" >
                 <TeamCardC
                   :team="team1!"
+                  :sourceType="match?.team1.source.type"
                   v-model:score="score1"
                 />
+                <button type="button" tabindex="-1" class="btn btn-danger popin popin-left" @click="removeSource('team1')">
+                  <i class="pi pi-times"></i>
+                </button>
               </div>
               <!-- separator -->
               <h5 class="align-self-center my-2">vs</h5>
@@ -89,11 +109,15 @@ watch(shown, () => {
                 {{ (match?.team2.source.type[0]?.charAt(0).toUpperCase() ?? "-") + match?.team2.source.type.slice(1) }}
               </b></h5>
               <!-- team 2 card -->
-              <div class="team-info">
+              <div class="team-info popin-holder">
                 <TeamCardC
                   :team="team2!"
+                  :sourceType="match?.team2.source.type"
                   v-model:score="score2"
                 />
+                <button type="button" tabindex="-1" class="btn btn-danger popin popin-left" @click="removeSource('team2')">
+                  <i class="pi pi-times"></i>
+                </button>
               </div>
             </div>
             <div class="modal-footer">

@@ -16,6 +16,19 @@ const mockTeamList: Team[] = [
 ]
 
 const mockMatchList: Match[] = [
+  {
+    id: "m0",
+    posX: 0,
+    posY: 0,
+    team1: {
+      source: { type: "team", teamId: "t1" },
+      score: 3
+    },
+    team2: {
+      source: { type: "team", teamId: "t2" },
+      score: 1
+    }
+  },
   /* three "inline referenced" matches */
   {
     id: "m1",
@@ -80,22 +93,22 @@ describe("global.ts: trySetSourceMatch", () => {
   })
 
   it("returns true if source can be set", async () => {
-    const result = trySetSourceMatch(matchList.value[2]!, matchList.value[3]!, "winner")
+    const result = trySetSourceMatch(matchList.value[3]!, matchList.value[4]!, "winner")
     expect(result).toBe(true)
   })
 
   it("returns false if no empty slots in match being sent to", async () => {
-    const result = trySetSourceMatch(matchList.value[3]!, matchList.value[1]!, "winner")
+    const result = trySetSourceMatch(matchList.value[4]!, matchList.value[2]!, "winner")
     expect(result).toBe(false)
   })
 
   it("returns false if assigning to self", async () => {
-    const result = trySetSourceMatch(matchList.value[2]!, matchList.value[2]!, "winner")
+    const result = trySetSourceMatch(matchList.value[3]!, matchList.value[3]!, "winner")
     expect(result).toBe(false)
   })
 
   it("returns false if it would lead to circular reference", async () => {
-    const result = trySetSourceMatch(matchList.value[2]!, matchList.value[0]!, "loser")
+    const result = trySetSourceMatch(matchList.value[3]!, matchList.value[1]!, "loser")
     expect(result).toBe(false)
   })
 

@@ -101,6 +101,12 @@ function finishSend(match: Match | null) {
       sending.value = false
   }
 }
+
+// Cancel "sending" mode with escape
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape")
+    finishSend(null)
+})
 </script>
 
 <template>

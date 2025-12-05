@@ -139,10 +139,12 @@ function onMatchClick() {
   >
     <TeamCardC
       :team="team1!"
+      :sourceType="match.team1.source.type"
       v-model:score="match.team1.score"
     />
     <TeamCardC
       :team="team2!"
+      :sourceType="match.team2.source.type"
       v-model:score="match.team2.score"
     />
   </div>
@@ -201,7 +203,7 @@ function onMatchClick() {
 <style scoped>
 .match-card {
   height: auto;
-  width: 16rem;
+  width: 17.5rem;
   position: absolute;
 }
 
@@ -249,6 +251,9 @@ function onMatchClick() {
   aspect-ratio: 1;
   padding: 0;
   overflow: hidden;
+}
+.popup button:focus {
+  box-shadow: none;
 }
 .match-card:not(.sending-mode):hover > .popup button {
   width: 100%;
