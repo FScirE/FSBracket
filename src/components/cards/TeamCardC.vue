@@ -102,9 +102,9 @@ watch(props, () => {
 .team-name h5 {
   margin: 0;
 }
-.team-source {
-  /*background: linear-gradient(90deg, var(--color-border-hover) 0% 85%, var(--purple-primary) 100%);*/
-}
+/* .team-source {
+  background: linear-gradient(90deg, var(--color-border-hover) 0% 85%, var(--purple-primary) 100%);
+} */
 
 .team-score {
   display: flex;

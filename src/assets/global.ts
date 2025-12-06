@@ -173,6 +173,37 @@ export function trySetSourceMatch(from: Match, to: Match, bracket: "winner" | "l
   return true
 }
 
+export function trySetSourceTeam(from: Team, to: Match) {
+  // check if match has empty slot
+  if (to.team1.source.type !== "none" && to.team2.source.type !== "none")
+    return false
+
+  // cant assign if match already has team assigned
+  if (
+    (to.team1.source.type === "team" && to.team1.source.teamId === from.id) ||
+    (to.team2.source.type === "team" && to.team2.source.teamId === from.id)
+  )
+    return false
+
+  const source: TeamSource = {
+    type: "team",
+    teamId: from.id
+  }
+
+  if (to.team1.source.type === "none") {
+    to.team1.source = source
+    to.team1.score = 0
+  }
+  else if (to.team2.source.type === "none") {
+    to.team2.source = source
+    to.team2.score = 0
+  }
+  else
+    return false // not possible but why not
+
+  return true
+}
+
 //
 /* data lists */
 //

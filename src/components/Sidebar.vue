@@ -6,6 +6,14 @@ import TeamCardC from '@/components/cards/TeamCardC.vue';
 import TeamModalC from '@/components/modals/TeamModalC.vue';
 import { Modal } from 'bootstrap'
 
+defineProps<{
+  sending: boolean
+}>()
+
+const emit = defineEmits<{
+  (e: "send:start", value: Team): void,
+}>()
+
 const selectedTeams = ref<Team[]>([])
 
 const teamModalMode = ref<"add" | "edit">("add")
@@ -88,7 +96,7 @@ function addMatch() {
 
 <template>
 <div class="collapse show" id="collapse-sidebar" ref="sidebarElement" :class="{ 'collapse-horizontal' : windowWidth > 800 }">
-  <div class="sidebar p-3">
+  <div class="sidebar p-3" :class="{ 'is-sending' : sending }">
     <h2 class="pb-3 mb-3 mt-1">Teams <i class="pi pi-users ms-3"></i></h2>
     <div class="team-list my-4 pr-1" @click="selectedTeams = []">
       <div
@@ -99,14 +107,26 @@ function addMatch() {
         <div
           class="team-item-card popin-holder"
           :class="{ 'selected-team' : selectedTeams.indexOf(team) != -1 }"
-          @click.stop="onClickTeam(team)"
+          @click.stop="() => { if (!sending) onClickTeam(team) }"
         >
           <TeamCardC
             :team="team"
             :sourceType="undefined"
           />
+          <!-- add team to match button -->
           <button
-            class="edit-team-button btn btn-primary popin popin-right"
+            class="btn btn-success popin popin-left"
+            type="button"
+            title="Add team to match"
+            @click.stop="emit('send:start', team)"
+            tabindex="-1"
+          >
+            <span class="visually-hidden">Edit team</span>
+            <i class="pi pi-plus mx-1"></i>
+          </button>
+          <!-- edit team button -->
+          <button
+            class="btn btn-primary popin popin-right"
             type="button"
             title="Edit team"
             @click.stop="openTeamEdit(team)"
@@ -182,6 +202,10 @@ function addMatch() {
 :deep(.team-item-card img) {
   border-bottom-left-radius: 0.5rem;
   border-top-left-radius: 0.5rem;
+}
+
+.is-sending {
+  pointer-events: none;
 }
 
 .bottom-section {

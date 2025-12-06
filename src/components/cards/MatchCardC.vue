@@ -247,6 +247,7 @@ function onMatchClick() {
   width: 2.5rem;
 }
 .popup button {
+  opacity: 0;
   width: 0;
   aspect-ratio: 1;
   padding: 0;
@@ -256,6 +257,7 @@ function onMatchClick() {
   box-shadow: none;
 }
 .match-card:not(.sending-mode):hover > .popup button {
+  opacity: 1;
   width: 100%;
 }
 </style>
