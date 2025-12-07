@@ -16,6 +16,8 @@ const sendTo = ref<Match | null>(null)
 const sendingType = ref<"match" | "team" | null>(null)
 const sendBracket = ref<"winner" | "loser">("winner")
 
+const sendingStatus = ref<string>("")
+
 onMounted(() => {
   // load theme from localStorage, or set default
   const theme = localStorage.getItem("theme")
@@ -98,6 +100,11 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape")
     finishSend(null)
 })
+
+watch(sendingType, () => {
+  if (sendingType.value !== null)
+    sendingStatus.value = `Send ${sendingType.value === "match" ? sendBracket.value : "team"} to match`
+})
 </script>
 
 <template>
@@ -113,7 +120,7 @@ document.addEventListener("keydown", (event) => {
       class="sending-status"
       :class="{ 'is-sending' : sendingType !== null }"
     >
-      <span class="fs-5 ps-3 me-3">Send {{ sendingType === "match" ? sendBracket : "team" }} to match</span>
+      <span class="fs-5 ps-3 me-3">{{ sendingStatus }}</span>
       <button class="btn btn-primary px-3" @click="finishSend(null)">
         <span>Cancel</span>
       </button>

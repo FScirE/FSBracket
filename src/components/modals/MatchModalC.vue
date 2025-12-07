@@ -90,7 +90,7 @@ watch(shown, () => {
               <!-- source 1 type label -->
               <h5 class="fw-normal">Source: <b>
                 {{ team1 ? (match?.team1.source.type[0]?.charAt(0).toUpperCase() ?? "-") + match?.team1.source.type.slice(1) : 'None' }}
-                {{ match?.team1.source.type === "match" ? match?.team1.source.bracket : '' }}
+                {{ team1 && match?.team1.source.type === "match" ? match?.team1.source.bracket : '' }}
               </b></h5>
               <!-- team 1 card -->
               <div class="team-info popin-holder" >
@@ -108,7 +108,7 @@ watch(shown, () => {
               <!-- source 2 type label -->
               <h5 class="fw-normal">Source: <b>
                 {{ team2 ? (match?.team2.source.type[0]?.charAt(0).toUpperCase() ?? "-") + match?.team2.source.type.slice(1) : 'None' }}
-                {{ match?.team2.source.type === "match" ? match?.team2.source.bracket : '' }}
+                {{ team2 && match?.team2.source.type === "match" ? match?.team2.source.bracket : '' }}
               </b></h5>
               <!-- team 2 card -->
               <div class="team-info popin-holder">

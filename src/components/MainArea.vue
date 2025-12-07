@@ -145,6 +145,7 @@ function openMatchModal(match: Match) {
 }
 
 .canvas {
+  z-index: 1;
   transform-origin: 0 0;
   position: relative;
   width: 100%;
@@ -153,6 +154,7 @@ function openMatchModal(match: Match) {
 }
 
 .connectors {
+  z-index: 0;
   position: absolute;
   pointer-events: none;
   top: 0;

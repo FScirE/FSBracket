@@ -169,6 +169,7 @@ function onMatchClick() {
   <div
     class="popup popup-right"
     :style="{ '--scale': props.scale }"
+    @mousedown.stop=""
   >
     <button
       class="btn btn-success"
@@ -252,7 +253,6 @@ function onMatchClick() {
   aspect-ratio: 1;
   padding: 0;
   overflow: hidden;
-  z-index: 10;
 }
 .popup button:focus {
   box-shadow: none;
