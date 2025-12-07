@@ -127,6 +127,7 @@ function onMatchClick() {
 <div
   class="match-card"
   :class="{ 'sending-mode' : sending }"
+  :id="match.id"
   ref="cardRef"
   :style="{ transform: `translate(${props.match.posX}px, ${props.match.posY}px)` }"
   @mousedown="startDragCard"
@@ -135,7 +136,6 @@ function onMatchClick() {
   <!-- teams in match -->
   <div
     class="team-cards"
-    :id="match.id"
   >
     <TeamCardC
       :team="team1!"
@@ -252,6 +252,7 @@ function onMatchClick() {
   aspect-ratio: 1;
   padding: 0;
   overflow: hidden;
+  z-index: 10;
 }
 .popup button:focus {
   box-shadow: none;

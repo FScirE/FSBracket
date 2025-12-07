@@ -3,8 +3,9 @@ import { ref } from 'vue'
 import { matchList, ZOOM_SENS } from '@/assets/global'
 import type { Match } from "@/assets/types"
 import MatchCardC from '@/components/cards/MatchCardC.vue'
-import MatchModalC from './modals/MatchModalC.vue'
+import MatchModalC from '@/components/modals/MatchModalC.vue'
 import { Modal } from 'bootstrap'
+import ConnectorC from '@/components/other/ConnectorC.vue'
 
 defineProps<{
   sending: boolean
@@ -112,7 +113,18 @@ function openMatchModal(match: Match) {
       @match:click="emit('send:finish', match)"
     />
   </div>
+  <svg class="connectors">
+    <ConnectorC
+      v-for="(match, index) in matchList"
+      :key="index"
+      :match="match"
+      :offsetX="offsetX"
+      :offsetY="offsetY"
+      :scale="scale"
+    />
+  </svg>
 </div>
+
 <MatchModalC
  :match-id="selectedMatchId"
 />
@@ -120,6 +132,7 @@ function openMatchModal(match: Match) {
 
 <style scoped>
 .mainarea {
+  position: relative;
   flex: 1;
   overflow: hidden;
   cursor: grab;
@@ -137,5 +150,14 @@ function openMatchModal(match: Match) {
   width: 100%;
   height: 100%;
   transition: transform 0.1s ease-out;
+}
+
+.connectors {
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>

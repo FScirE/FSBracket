@@ -113,7 +113,7 @@ document.addEventListener("keydown", (event) => {
       class="sending-status"
       :class="{ 'is-sending' : sendingType !== null }"
     >
-      <span class="fs-5 ps-3 me-3">Send {{ sendingType === "match" ? sendBracket : 'team' }} to match</span>
+      <span class="fs-5 ps-3 me-3">Send {{ sendingType === "match" ? sendBracket : "team" }} to match</span>
       <button class="btn btn-primary px-3" @click="finishSend(null)">
         <span>Cancel</span>
       </button>
@@ -164,6 +164,7 @@ main {
   margin-top: 2px;
   background-color: var(--color-border-hover);
   border-radius: 0.5rem;
+  z-index: 12;
   transition: height 0.3s ease;
 }
 .sending-status button {
@@ -171,7 +172,7 @@ main {
 }
 .sending-status.is-sending {
   height: 2.5rem;
-  z-index: 12;
+
 }
 
 @media (max-width: 800px) {
