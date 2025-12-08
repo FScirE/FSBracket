@@ -1,5 +1,5 @@
 import { ref, watch } from 'vue'
-import type { Team, TeamSource, Match } from "@/assets/types"
+import type { Team, TeamSource, Match, Line } from "@/assets/types"
 
 //
 /* global variables */
@@ -202,6 +202,75 @@ export function trySetSourceTeam(from: Team, to: Match) {
     return false // not possible but why not
 
   return true
+}
+
+export function createLinePath(start: { x: number, y: number }, end: { x: number, y: number }, verticalDirection: boolean, dashed: boolean, color: string, width: number) {
+  const lines: Line[] = []
+
+  // Case 1: Aligned on an axis
+
+  if (Math.round((start.x - end.x) * 100) / 100 === 0 || Math.round((start.y - end.y) * 100) / 100 === 0) {
+    lines.push({
+      x1: start.x,
+      y1: start.y,
+      x2: end.x,
+      y2: end.y,
+      width,
+      color,
+      dashed
+    })
+
+    return lines
+  }
+
+  // Case 2: Not aligned
+
+  const midStep = verticalDirection ? (end.y + start.y) / 2 : (end.x + start.x) / 2
+
+  const mid1 = verticalDirection ? {
+    x: start.x,
+    y: midStep
+  } : {
+    x: midStep,
+    y: start.y
+  }
+  const mid2 = verticalDirection ? {
+    x: end.x,
+    y: midStep
+  } : {
+    x: midStep,
+    y: end.y
+  }
+
+  lines.push({
+    x1: start.x,
+    y1: start.y,
+    x2: mid1.x,
+    y2: mid1.y,
+    width: width,
+    color: color,
+    dashed: dashed
+  })
+  lines.push({
+    x1: mid1.x,
+    y1: mid1.y,
+    x2: mid2.x,
+    y2: mid2.y,
+    width: width,
+    color: color,
+    dashed: dashed
+  })
+  lines.push({
+    x1: mid2.x,
+    y1: mid2.y,
+    x2: end.x,
+    y2: end.y,
+    width: width,
+    color: color,
+    dashed: dashed
+  })
+
+  return lines
 }
 
 //

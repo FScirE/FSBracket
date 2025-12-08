@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Match, Line } from '@/assets/types'
-import { getMatchIndexById, matchList } from '@/assets/global';
+import { createLinePath, getMatchIndexById, matchList } from '@/assets/global';
 import { computed, onMounted, ref, watch } from 'vue'
 
 const props = defineProps<{
@@ -10,11 +10,10 @@ const props = defineProps<{
   scale: number
 }>()
 
-const target = ref<{ x: number, y: number } | null>(null)
-const sources = ref<[{ x: number, y: number } | null, { x: number, y: number } | null]>([null, null])
-
 const sourceMatch1 = computed(() => props.match.team1.source.type === "match" ? matchList.value[getMatchIndexById(props.match.team1.source.matchId)]! : null)
 const sourceMatch2 = computed(() => props.match.team2.source.type === "match" ? matchList.value[getMatchIndexById(props.match.team2.source.matchId)]! : null)
+const source1Bracket = computed(() => props.match.team1.source.type === "match" ? props.match.team1.source.bracket : "winner")
+const source2Bracket = computed(() => props.match.team2.source.type === "match" ? props.match.team2.source.bracket : "winner")
 
 const lines = ref<Line[]>([])
 
@@ -38,63 +37,52 @@ function updateCoordinates() {
     if (!sourceElement)
       return
 
-    const midRange = 16
+    let color= "var(--color-border-hover)"
+    let width = 2.5
 
-    let color: string;
+    const bracket = i === 0 ? source1Bracket.value : source2Bracket.value
+    let dashed = bracket === "loser"
 
-    let cXS: number;
-    let cYS = s.posY + sourceElement.clientHeight / 2;
+    let cYS: number
+    let cXS: number
+    let cXT: number
+    let cYT: number
+    let vertical: boolean
 
-    let cXT: number;
-    let cYT = t.posY + targetElement.clientHeight / 2;
-
-    // Case 1: same x-coordinates
-    if (Math.abs(t.posX - s.posX) < midRange) {
-      color = "red"
-      cXS = cXT = t.posX + targetElement.clientWidth / 2
-      // Change source and target y-coordinates
-      if (t.posY > s.posY) {
-        cYS = s.posY + sourceElement.clientHeight
-        cYT = t.posY
-      }
-      else if (t.posY < s.posY) {
-        cYS = s.posY
-        cYT = t.posY + targetElement.clientHeight
-      }
-    }
-    // Case 2: target.x > source.x but still overlap
-    else if (t.posX > s.posX && s.posX + sourceElement.clientWidth > t.posX) {
-      color = "yellow"
+    // Case 1: Target is right of source
+    if (s.posX + sourceElement.clientWidth < t.posX) {
       cXS = s.posX + sourceElement.clientWidth
+      cYS = s.posY + sourceElement.clientHeight / 2
       cXT = t.posX
+      cYT = t.posY + targetElement.clientHeight / 2
+      vertical = false
     }
-    // Case 3: target.x > source.x and no overlap
-    else if (s.posX + sourceElement.clientWidth <= t.posX) {
-      color = "white"
-      cXS = s.posX + sourceElement.clientWidth
-      cXT = t.posX
-    }
-    // Case 4: target x < source.x but still overlap
-    else if (t.posX < s.posX && t.posX + targetElement.clientWidth > s.posX) {
-      color = "purple"
+    // Case 2: Target is left of source
+    else if (t.posX + targetElement.clientWidth < s.posX) {
       cXS = s.posX
+      cYS = s.posY + sourceElement.clientHeight / 2
       cXT = t.posX + targetElement.clientWidth
+      cYT = t.posY + targetElement.clientHeight / 2
+      vertical = false
     }
-    // Case 5: target x < source.x and no overlap
+    // Case 3: Target is above source
+    else if (t.posY + targetElement.clientHeight < s.posY) {
+      cXS = s.posX + sourceElement.clientWidth / 2
+      cYS = s.posY
+      cXT = t.posX + targetElement.clientWidth / 2
+      cYT = t.posY + targetElement.clientHeight
+      vertical = true
+    }
+    // Case 4: Target is below source
     else {
-      color = "blue"
-      cXS = s.posX
-      cXT = t.posX + targetElement.clientWidth
+      cXS = s.posX + sourceElement.clientWidth / 2
+      cYS = s.posY + sourceElement.clientHeight
+      cXT = t.posX + targetElement.clientWidth / 2
+      cYT = t.posY
+      vertical = true
     }
 
-    lines.value.push({
-      x1: cXS,
-      y1: cYS,
-      x2: cXT,
-      y2: cYT,
-      width: 2,
-      color: color
-    })
+    lines.value = lines.value.concat(createLinePath({ x: cXS, y: cYS }, { x: cXT, y: cYT }, vertical, dashed, color, width))
   })
 }
 
@@ -117,12 +105,14 @@ watch([props.match, sourceMatch1, sourceMatch2], () => {
   :y2="line.y2"
   :stroke="line.color"
   :stroke-width="line.width"
+  :stroke-dasharray="line.dashed ?  `${line.width} ${line.width * 2}` : ''"
 >
 </line>
 </template>
 
 <style scoped>
 .connector {
+  stroke-linecap: round;
   transition: transform 0.1s ease-out;
 }
 </style>

@@ -35,5 +35,6 @@ export type Line = {
   x2: number,
   y2: number,
   width: number,
-  color: string
+  color: string,
+  dashed: boolean
 }
