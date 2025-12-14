@@ -27,7 +27,7 @@ function toggleTheme() {
 }
 
 function downloadAsImage() {
-  var node = document.getElementById('canvas');
+  var node = document.getElementById('mainarea');
   if (!node)
     return
 

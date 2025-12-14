@@ -82,6 +82,8 @@ function updateCoordinates() {
       vertical = true
     }
 
+    if (dashed)
+      lines.value = lines.value.concat(createLinePath({ x: cXS, y: cYS }, { x: cXT, y: cYT }, vertical, false, "var(--color-background)", width))
     lines.value = lines.value.concat(createLinePath({ x: cXS, y: cYS }, { x: cXT, y: cYT }, vertical, dashed, color, width))
   })
 }

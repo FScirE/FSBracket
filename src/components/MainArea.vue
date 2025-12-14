@@ -90,6 +90,7 @@ function openMatchModal(match: Match) {
 <template>
 <div
   class="mainarea"
+  id="mainarea"
   ref="mainAreaRef"
   @mousedown="startDragArea"
   @mousemove="handleMouseMove"
