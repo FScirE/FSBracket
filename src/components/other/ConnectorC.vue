@@ -107,7 +107,7 @@ watch([props.match, sourceMatch1, sourceMatch2], () => {
   :y2="line.y2"
   :stroke="line.color"
   :stroke-width="line.width"
-  :stroke-dasharray="line.dashed ?  `${line.width} ${line.width * 2}` : ''"
+  :stroke-dasharray="line.dashed ? `${line.width} ${line.width * 2}` : ''"
 >
 </line>
 </template>

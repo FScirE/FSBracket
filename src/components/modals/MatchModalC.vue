@@ -58,7 +58,7 @@ onMounted(() => {
   })
   document.addEventListener('hide.bs.modal', () => {
     if (document.activeElement)
-      (document.activeElement as HTMLElement).blur();
+      (document.activeElement as HTMLElement).blur()
   })
   document.addEventListener('hidden.bs.modal', () => {
     shown.value = false

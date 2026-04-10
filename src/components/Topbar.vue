@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { windowWidth } from '@/assets/global'
-import * as htmlToImage from 'html-to-image'
+import { Modal } from 'bootstrap'
+import IEModalC from './modals/IEModalC.vue'
 
 defineProps<{
   saveStatus: string
@@ -26,21 +27,14 @@ function toggleTheme() {
   theme.value = next
 }
 
-function downloadAsImage() {
-  var node = document.getElementById('mainarea');
-  if (!node)
+function openIEModal() {
+  const element = document.getElementById("ie-modal")
+  if (!element)
     return
-
-  htmlToImage.toPng(node!)
-    .then(function (dataUrl) {
-      var link = document.createElement('a');
-      link.download = 'bracket.png';
-      link.href = dataUrl;
-      link.click();
-    })
-    .catch(function (error: Error) {
-      console.error('Oops, something went wrong!', error);
-    })
+  const modal = Modal.getOrCreateInstance(element)
+  if (!modal)
+    return
+  modal.show()
 }
 </script>
 
@@ -69,15 +63,16 @@ function downloadAsImage() {
     </h1>
   </div>
   <div class="d-flex gap-4">
-    <button class="btn btn-primary" type="button" @click="downloadAsImage" title="Download as image">
-      <span class="visually-hidden">Download image</span>
-      <i class="pi pi-image fs-4 p-1"></i>
+    <button class="btn btn-primary" type="button" @click="openIEModal" title="Import/export">
+      <span class="visually-hidden">Import/export</span>
+      <i class="pi pi-file fs-4 p-1"></i>
     </button>
     <button class="btn btn-primary me-4" type="button" @click="toggleTheme" title="Toggle theme">
       <span class="visually-hidden">Toggle theme</span>
       <i class="pi fs-4 p-1" :class="(theme === 'dark') ? 'pi-moon' : 'pi-sun'"></i>
     </button>
   </div>
+  <IEModalC />
 </div>
 </template>
 

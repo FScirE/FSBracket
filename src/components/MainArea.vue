@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { matchList, ZOOM_SENS } from '@/assets/global'
+import { computed, ref } from 'vue'
+import { matchList, reloadKey, ZOOM_SENS } from '@/assets/global'
 import type { Match } from "@/assets/types"
 import MatchCardC from '@/components/cards/MatchCardC.vue'
 import MatchModalC from '@/components/modals/MatchModalC.vue'
@@ -25,6 +25,8 @@ const offsetY = ref<number>(0)
 const scale = ref<number>(1)
 
 const selectedMatchId = ref<string>("")
+
+const transformStyle = computed(() => ({transform: `translate(${offsetX.value}px, ${offsetY.value}px) scale(${scale.value})`}))
 
 function startDragArea(event: MouseEvent) {
   isDraggingArea.value = true
@@ -101,7 +103,8 @@ function openMatchModal(match: Match) {
   <div
     class="canvas"
     id="canvas"
-    :style="{transform: `translate(${offsetX}px, ${offsetY}px) scale(${scale})`}"
+    :style="transformStyle"
+    :key="reloadKey"
   >
     <MatchCardC
       v-for="(match, index) in matchList"
@@ -114,7 +117,10 @@ function openMatchModal(match: Match) {
       @match:click="emit('send:finish', match)"
     />
   </div>
-  <svg class="connectors">
+  <svg
+    class="connectors"
+    :key="reloadKey"
+  >
     <ConnectorC
       v-for="(match, index) in matchList"
       :key="index"
@@ -152,6 +158,7 @@ function openMatchModal(match: Match) {
   width: 100%;
   height: 100%;
   transition: transform 0.1s ease-out;
+  will-change: transform;
 }
 
 .connectors {

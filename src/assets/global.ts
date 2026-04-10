@@ -280,6 +280,8 @@ export function createLinePath(start: { x: number, y: number }, end: { x: number
 export const teamList = ref<Team[]>([])
 export const matchList = ref<Match[]>([])
 
+export const reloadKey = ref<number>(0)
+
 // Placeholder values below
 
 // teamList.value = [

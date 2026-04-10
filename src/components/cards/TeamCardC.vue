@@ -41,7 +41,7 @@ watch(props, () => {
 <template>
 <div class="team-card" :class="{ 'team-card-placeholder' : team === null }">
   <div class="team-image">
-    <img :src="team.imageUrl" :alt="team.name" v-if="team"></img>
+    <img :src="team.imageUrl" :alt="team.name" v-if="team" decoding="async"></img>
   </div>
   <div class="team-name ps-2" :class="{'team-source' : sourceType === 'team'}">
     <h5 v-if="team">{{ team.name }}</h5>
