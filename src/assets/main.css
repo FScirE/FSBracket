@@ -110,15 +110,10 @@ body {
 .btn-primary:disabled,
 .btn-primary:active {
   background-color: var(--purple-primary) !important;
+  color: var(--white-dark);
 }
 .btn-primary:hover {
   background-color: var(--purple-dark) !important;
-}
-html[data-theme="light"] .btn-primary {
-  color: var(--vt-c-white-mute);
-}
-html[data-theme="dark"] .btn-primary {
-  color: var(--white-dark);
 }
 .btn-secondary,
 .btn-secondary:disabled,

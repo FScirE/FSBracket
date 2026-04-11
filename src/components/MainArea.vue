@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { matchList, reloadKey, ZOOM_SENS } from '@/assets/global'
 import type { Match } from "@/assets/types"
 import MatchCardC from '@/components/cards/MatchCardC.vue'
 import MatchModalC from '@/components/modals/MatchModalC.vue'
 import { Modal } from 'bootstrap'
 import ConnectorC from '@/components/other/ConnectorC.vue'
+import CanvasMenuC from '@/components/other/CanvasMenuC.vue'
 
 defineProps<{
   sending: boolean
@@ -27,6 +28,11 @@ const scale = ref<number>(1)
 const selectedMatchId = ref<string>("")
 
 const transformStyle = computed(() => ({transform: `translate(${offsetX.value}px, ${offsetY.value}px) scale(${scale.value})`}))
+
+const showLoser = ref<boolean>(localStorage.getItem("showLoser") == "1")
+watch(showLoser, show => {
+  localStorage.setItem("showLoser", show ? "1" : "0")
+})
 
 function startDragArea(event: MouseEvent) {
   isDraggingArea.value = true
@@ -131,7 +137,12 @@ function openMatchModal(match: Match) {
     />
   </svg>
 </div>
-
+<CanvasMenuC
+  v-model:offsetX="offsetX"
+  v-model:offsetY="offsetY"
+  v-model:scale="scale"
+  v-model:showLoser="showLoser"
+/>
 <MatchModalC
  :match-id="selectedMatchId"
 />

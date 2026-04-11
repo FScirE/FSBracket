@@ -98,7 +98,7 @@ function addMatch() {
 <div class="collapse show" id="collapse-sidebar" ref="sidebarElement" :class="{ 'collapse-horizontal' : windowWidth > 800 }">
   <div class="sidebar p-3" :class="{ 'is-sending' : sending }">
     <h2 class="pb-3 mb-3 mt-1">Teams <i class="pi pi-users ms-3"></i></h2>
-    <div class="team-list my-4 pr-1" @click="selectedTeams = []">
+    <div class="team-list my-4 pr-1 gap-4" @click="selectedTeams = []">
       <div
         class="team-item mx-2"
         v-for="(team, index) in teamList"
@@ -184,7 +184,6 @@ function addMatch() {
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
   flex: 1;
 }
 
