@@ -125,7 +125,7 @@ function openMatchModal(match: Match) {
   </div>
   <svg
     class="connectors"
-    :key="reloadKey"
+    :key="reloadKey + (showLoser ? 1 : 0)"
   >
     <ConnectorC
       v-for="(match, index) in matchList"
@@ -134,6 +134,7 @@ function openMatchModal(match: Match) {
       :offsetX="offsetX"
       :offsetY="offsetY"
       :scale="scale"
+      :showLoser="showLoser"
     />
   </svg>
 </div>

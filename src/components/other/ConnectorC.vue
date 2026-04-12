@@ -7,7 +7,8 @@ const props = defineProps<{
   match: Match,
   offsetX: number,
   offsetY: number,
-  scale: number
+  scale: number,
+  showLoser: boolean
 }>()
 
 const sourceMatch1 = computed(() => props.match.team1.source.type === "match" ? matchList.value[getMatchIndexById(props.match.team1.source.matchId)]! : null)
@@ -82,9 +83,13 @@ function updateCoordinates() {
       vertical = true
     }
 
-    if (dashed)
+    if (dashed && props.showLoser) {
       lines.value = lines.value.concat(createLinePath({ x: cXS, y: cYS }, { x: cXT, y: cYT }, vertical, false, "var(--color-background)", width))
-    lines.value = lines.value.concat(createLinePath({ x: cXS, y: cYS }, { x: cXT, y: cYT }, vertical, dashed, color, width))
+      lines.value = lines.value.concat(createLinePath({ x: cXS, y: cYS }, { x: cXT, y: cYT }, vertical, dashed, color, width))
+    }
+    else if (!dashed) {
+      lines.value = lines.value.concat(createLinePath({ x: cXS, y: cYS }, { x: cXT, y: cYT }, vertical, dashed, color, width))
+    }
   })
 }
 

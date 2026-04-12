@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ZOOM_SENS } from '@/assets/global';
+import { reloadKey, ZOOM_SENS } from '@/assets/global';
 
 const props = defineProps<{
   offsetX: number,
@@ -12,8 +12,13 @@ const emit = defineEmits<{
   (e: "update:offsetX", value: number): void,
   (e: "update:offsetY", value: number): void,
   (e: "update:scale", value: number): void,
-  (e: "update:showLoser", value: number): void
+  (e: "update:showLoser", value: boolean): void
 }>()
+
+function toggleShowLoser() {
+  emit('update:showLoser', !props.showLoser)
+  //reloadKey.value += 1
+}
 
 function resetTransforms() {
   emit("update:offsetX", 0)
@@ -41,6 +46,19 @@ function zoom(increase: boolean) {
 <div class="canvas-menu px-3 py-2">
   <span class="hint">
     <i class="pi pi-cog fs-5"></i>
+  </span>
+
+  <button
+    class="btn me-2"
+    :class="showLoser ? 'btn-primary' : 'btn-secondary'"
+    @click="toggleShowLoser"
+    title="Toggle loser connectors"
+  >
+    <h5 class="mb-0">L</h5>
+    <span class="visually-hidden">Toggle loser connectors</span>
+  </button>
+  <span class="canvas-menu-text py-0 pb-0 me-3">
+    Loser connectors: {{ showLoser ? 'ON' : 'OFF' }}
   </span>
 
   <button
