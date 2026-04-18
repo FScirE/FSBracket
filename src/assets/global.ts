@@ -282,6 +282,8 @@ export const matchList = ref<Match[]>([])
 
 export const reloadKey = ref<number>(0)
 
+export const fitCanvas = ref<boolean>(false)
+
 // Placeholder values below
 
 // teamList.value = [

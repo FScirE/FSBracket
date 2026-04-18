@@ -1,16 +1,22 @@
-import { matchList, reloadKey, teamList } from "./global"
+import { fitCanvas, matchList, reloadKey, teamList } from "./global"
 import * as htmlToImage from 'html-to-image'
 import { Modal } from 'bootstrap'
+import { nextTick } from "vue"
 
 export async function downloadAsImage() {
   var node = document.getElementById("mainarea")
   if (!node)
     return
 
-  // Replace team score inputs with spans for correct rendering
+  const rememberBackgroundcolor = node.style.backgroundColor
   const inputs = node.querySelectorAll(".team-score input") as NodeListOf<HTMLInputElement>
   const replacements: { input: HTMLInputElement, span: HTMLSpanElement }[] = []
 
+  fitCanvas.value = true
+  // Set background color to transparent
+  node.style.backgroundColor = "transparent"
+  node.classList.add("no-transition")
+  // Replace team score inputs with spans for correct rendering
   inputs.forEach(input => {
     const span = document.createElement("span")
     span.textContent = input.value
@@ -24,8 +30,13 @@ export async function downloadAsImage() {
     input.parentNode!.replaceChild(span, input)
   })
 
+  await nextTick()
+
   try {
-    const dataUrl = await htmlToImage.toPng(node!)
+    const dataUrl = await htmlToImage.toPng(node!, {
+      backgroundColor: "transparent",
+      pixelRatio: 2
+    })
 
     var link = document.createElement("a")
     link.download = "bracket.png"
@@ -36,6 +47,10 @@ export async function downloadAsImage() {
     console.log('Image export failed')
   }
 
+  fitCanvas.value = false
+  node.classList.remove("no-transition")
+  // Restore background color
+  node.style.backgroundColor = rememberBackgroundcolor
   // Restore inputs
   replacements.forEach(({ input, span }) => {
     span.parentNode!.replaceChild(input, span)

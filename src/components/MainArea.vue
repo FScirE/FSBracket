@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { matchList, reloadKey, ZOOM_SENS } from '@/assets/global'
+import { fitCanvas, matchList, reloadKey, ZOOM_SENS } from '@/assets/global'
 import type { Match } from "@/assets/types"
 import MatchCardC from '@/components/cards/MatchCardC.vue'
 import MatchModalC from '@/components/modals/MatchModalC.vue'
@@ -27,7 +27,13 @@ const scale = ref<number>(1)
 
 const selectedMatchId = ref<string>("")
 
-const transformStyle = computed(() => ({transform: `translate(${offsetX.value}px, ${offsetY.value}px) scale(${scale.value})`}))
+const transformStyle = computed(() => {
+  if (!fitCanvas.value)
+    return ({transform: `translate(${offsetX.value}px, ${offsetY.value}px) scale(${scale.value})`})
+  else
+    return ({transform: getFitTransform()})
+})
+defineExpose({fitCanvas})
 
 const showLoser = ref<boolean>(localStorage.getItem("showLoser") == "1")
 watch(showLoser, show => {
@@ -93,6 +99,37 @@ function openMatchModal(match: Match) {
     return
   modal.show()
 }
+
+function getFitTransform() {
+  if (!mainAreaRef.value)
+    return ""
+
+  const rect = mainAreaRef.value.getBoundingClientRect()
+  const card = mainAreaRef.value.querySelector(".match-card")
+  if (!card)
+    return ""
+
+  // Get dimensions of a match card
+  const cardRect = card.getBoundingClientRect()
+  const cardWidth = cardRect.width / scale.value
+  const cardHeight = cardRect.height / scale.value
+
+  // Get desired canvas width
+  const minCardX = Math.min(...matchList.value.map(m => m.posX))
+  const maxCardX = Math.max(...matchList.value.map(m => m.posX + cardWidth))
+  const desiredWidth = Math.round(maxCardX - minCardX)
+  // Get desired canvas height
+  const minCardY = Math.min(...matchList.value.map(m => m.posY))
+  const maxCardY = Math.max(...matchList.value.map(m => m.posY + cardHeight))
+  const desiredHeight = Math.round(maxCardY - minCardY)
+
+  // Get scale needed to fit
+  const widthScale = rect.width / desiredWidth
+  const heightScale = rect.height / desiredHeight
+  const desiredScale = Math.min(widthScale, heightScale)
+
+  return `scale(${desiredScale}) translate(${-minCardX}px, ${-minCardY}px)`
+}
 </script>
 
 <template>
@@ -131,9 +168,7 @@ function openMatchModal(match: Match) {
       v-for="(match, index) in matchList"
       :key="index"
       :match="match"
-      :offsetX="offsetX"
-      :offsetY="offsetY"
-      :scale="scale"
+      :transformStyle="transformStyle"
       :showLoser="showLoser"
     />
   </svg>

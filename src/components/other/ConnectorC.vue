@@ -5,10 +5,8 @@ import { computed, onMounted, ref, watch } from 'vue'
 
 const props = defineProps<{
   match: Match,
-  offsetX: number,
-  offsetY: number,
-  scale: number,
-  showLoser: boolean
+  showLoser: boolean,
+  transformStyle: any
 }>()
 
 const sourceMatch1 = computed(() => props.match.team1.source.type === "match" ? matchList.value[getMatchIndexById(props.match.team1.source.matchId)]! : null)
@@ -105,7 +103,7 @@ watch([props.match, sourceMatch1, sourceMatch2], () => {
   v-for="(line, index) in lines"
   :key="index"
   class="connector"
-  :style="{transform: `translate(${offsetX}px, ${offsetY}px) scale(${scale})`}"
+  :style="transformStyle"
   :x1="line.x1"
   :y1="line.y1"
   :x2="line.x2"

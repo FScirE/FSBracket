@@ -22,6 +22,8 @@ const cardRef = ref<HTMLElement | null>(null)
 const dragStartX = ref<number>(0)
 const dragStartY = ref<number>(0)
 
+const transformStyle = computed(() => ({transform: `translate(${props.match.posX}px, ${props.match.posY}px)`}))
+
 const team1 = computed(() => getTeamFromSource(props.match.team1.source))
 const team2 = computed(() => getTeamFromSource(props.match.team2.source))
 
@@ -129,7 +131,7 @@ function onMatchClick() {
   :class="{ 'sending-mode' : sending }"
   :id="match.id"
   ref="cardRef"
-  :style="{ transform: `translate(${props.match.posX}px, ${props.match.posY}px)` }"
+  :style="transformStyle"
   @mousedown="startDragCard"
   @click="onMatchClick"
 >
