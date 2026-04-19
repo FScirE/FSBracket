@@ -9,11 +9,13 @@ export async function downloadAsImage() {
     return
 
   const rememberBackgroundcolor = node.style.backgroundColor
+  const rememberWidth = node.style.maxWidth
+  const rememberHeight = node.style.maxHeight
   const inputs = node.querySelectorAll(".team-score input") as NodeListOf<HTMLInputElement>
   const replacements: { input: HTMLInputElement, span: HTMLSpanElement }[] = []
 
   fitCanvas.value = true
-  // Set background color to transparent
+  // Set background color to transparent and remove transitions
   node.style.backgroundColor = "transparent"
   node.classList.add("no-transition")
   // Replace team score inputs with spans for correct rendering
@@ -29,6 +31,12 @@ export async function downloadAsImage() {
 
     input.parentNode!.replaceChild(span, input)
   })
+
+  await nextTick()
+
+  const canvas = node.querySelector("#canvas")! as HTMLElement
+  node.style.maxWidth = canvas.style.width
+  node.style.maxHeight = canvas.style.height
 
   await nextTick()
 
@@ -55,6 +63,9 @@ export async function downloadAsImage() {
   replacements.forEach(({ input, span }) => {
     span.parentNode!.replaceChild(input, span)
   })
+  // Restore width+height
+  node.style.maxWidth = rememberWidth
+  node.style.maxHeight = rememberHeight
 }
 
 export async function exportToFile() {

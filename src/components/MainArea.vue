@@ -28,12 +28,11 @@ const scale = ref<number>(1)
 const selectedMatchId = ref<string>("")
 
 const transformStyle = computed(() => {
-  if (!fitCanvas.value)
-    return ({transform: `translate(${offsetX.value}px, ${offsetY.value}px) scale(${scale.value})`})
+  if (!fitCanvas.value && !showLoser.value)
+    return ({ transform: `translate(${offsetX.value}px, ${offsetY.value}px) scale(${scale.value})` })
   else
-    return ({transform: getFitTransform()})
+    return (getFitStyle())
 })
-defineExpose({fitCanvas})
 
 const showLoser = ref<boolean>(localStorage.getItem("showLoser") == "1")
 watch(showLoser, show => {
@@ -100,14 +99,14 @@ function openMatchModal(match: Match) {
   modal.show()
 }
 
-function getFitTransform() {
+function getFitStyle() {
   if (!mainAreaRef.value)
-    return ""
+    return {}
 
   const rect = mainAreaRef.value.getBoundingClientRect()
   const card = mainAreaRef.value.querySelector(".match-card")
   if (!card)
-    return ""
+    return {}
 
   // Get dimensions of a match card
   const cardRect = card.getBoundingClientRect()
@@ -128,7 +127,11 @@ function getFitTransform() {
   const heightScale = rect.height / desiredHeight
   const desiredScale = Math.min(widthScale, heightScale)
 
-  return `scale(${desiredScale}) translate(${-minCardX}px, ${-minCardY}px)`
+  return {
+    transform: `scale(${desiredScale}) translate(${-minCardX}px, ${-minCardY}px)`,
+    width: `${desiredWidth * desiredScale}px`,
+    height: `${desiredHeight * desiredScale}px`
+  }
 }
 </script>
 
