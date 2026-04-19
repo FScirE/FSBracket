@@ -28,7 +28,7 @@ const scale = ref<number>(1)
 const selectedMatchId = ref<string>("")
 
 const transformStyle = computed(() => {
-  if (!fitCanvas.value && !showLoser.value)
+  if (!fitCanvas.value)
     return ({ transform: `translate(${offsetX.value}px, ${offsetY.value}px) scale(${scale.value})` })
   else
     return (getFitStyle())
