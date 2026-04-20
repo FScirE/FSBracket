@@ -149,10 +149,21 @@ html[data-theme="dark"] .btn-close {
   filter: invert(1) grayscale(100%);
 }
 
+/* select styling */
+select {
+  position: relative;
+  border: none;
+  outline: none;
+  border-right: 0.5rem solid transparent;
+  background-image: none;
+  background-color: var(--color-border);
+  color: var(--color-text);
+}
+
 /* override bootstrap input styling */
-input:focus {
-  border: 1px solid var(--purple-primary) !important;
-  box-shadow: 0 0 0 1px var(--purple-primary) !important;
+input:focus,
+select:focus {
+  box-shadow: 0 0 0 2px var(--purple-primary) !important;
 }
 
 /* override bootstrap font sizing */

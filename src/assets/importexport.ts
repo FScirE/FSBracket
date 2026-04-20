@@ -3,9 +3,11 @@ import * as htmlToImage from 'html-to-image'
 import { Modal } from 'bootstrap'
 import { nextTick } from "vue"
 
-export async function downloadAsImage() {
+const BASELINE_CARD_HEIGHT = 100
+
+export async function downloadAsImage(quality: number) {
   var node = document.getElementById("mainarea")
-  if (!node)
+  if (!node || matchList.value.length < 1)
     return
 
   const rememberBackgroundcolor = node.style.backgroundColor
@@ -38,12 +40,17 @@ export async function downloadAsImage() {
   node.style.maxWidth = canvas.style.width
   node.style.maxHeight = canvas.style.height
 
+  // Calculate pixel ratio
+  const matchCardHeight = document.querySelector(".match-card")!.getBoundingClientRect().height
+  const pixelRatio = (BASELINE_CARD_HEIGHT * quality) / matchCardHeight
+
   await nextTick()
 
   try {
     const dataUrl = await htmlToImage.toPng(node!, {
       backgroundColor: "transparent",
-      pixelRatio: 2
+      pixelRatio: pixelRatio,
+      quality: 1
     })
 
     var link = document.createElement("a")
@@ -55,17 +62,18 @@ export async function downloadAsImage() {
     console.log('Image export failed')
   }
 
+  // Restore width+height
+  node.style.maxWidth = rememberWidth
+  node.style.maxHeight = rememberHeight
   fitCanvas.value = false
-  node.classList.remove("no-transition")
   // Restore background color
   node.style.backgroundColor = rememberBackgroundcolor
   // Restore inputs
   replacements.forEach(({ input, span }) => {
     span.parentNode!.replaceChild(input, span)
   })
-  // Restore width+height
-  node.style.maxWidth = rememberWidth
-  node.style.maxHeight = rememberHeight
+  // Reenable transition
+  node.classList.remove("no-transition")
 }
 
 export async function exportToFile() {

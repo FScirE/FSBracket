@@ -3,10 +3,12 @@ import { downloadAsImage, exportToFile, importFromFile } from '@/assets/importex
 import { ref, onMounted } from 'vue'
 
 const shown = ref<boolean>(false)
+const quality = ref<number>(1)
 
 onMounted(() => {
   document.addEventListener('show.bs.modal', () => {
     shown.value = true
+    quality.value = 1
   })
   document.addEventListener('hide.bs.modal', () => {
     if (document.activeElement)
@@ -38,9 +40,26 @@ onMounted(() => {
 
               <hr class="hr text-secondary">
               <h4>Exporting</h4>
-              <span>
-                <button class="btn btn-primary" @click="downloadAsImage"><i class="pi pi-image"></i></button>
-                Save as image
+              <span class="d-flex flex-row justify-content-between align-items-center">
+                <span>
+                  <button class="btn btn-primary" @click="downloadAsImage(quality)"><i class="pi pi-image"></i></button>
+                  Save as image
+                </span>
+                <span>
+                  <select
+                    class="form-select-sm"
+                    aria-label="Quality"
+                    id="quality-select"
+                    title="Quality"
+                    v-model="quality"
+                  >
+                    <option :value="2">2x</option>
+                    <option :value="1.5">1.5x</option>
+                    <option :value="1">1x</option>
+                    <option :value="0.75">0.75x</option>
+                    <option :value="0.5">0.5x</option>
+                  </select>
+                </span>
               </span>
               <span>
                 <button class="btn btn-primary" @click="exportToFile"><i class="pi pi-file-export"></i></button>
