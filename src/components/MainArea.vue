@@ -172,7 +172,6 @@ function getFitStyle() {
       />
     </svg>
   </div>
-
 </div>
 <CanvasMenuC
   v-model:offsetX="offsetX"
@@ -200,7 +199,6 @@ function getFitStyle() {
 }
 
 .canvas {
-  z-index: 1;
   transform-origin: 0 0;
   position: relative;
   width: 100%;

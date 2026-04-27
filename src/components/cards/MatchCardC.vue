@@ -205,6 +205,7 @@ function onMatchClick() {
 
 <style scoped>
 .match-card {
+  z-index: 1;
   height: auto;
   width: 17.5rem;
   position: absolute;
