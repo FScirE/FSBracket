@@ -17,7 +17,7 @@ const emit = defineEmits<{
 
 function toggleShowLoser() {
   emit('update:showLoser', !props.showLoser)
-  //reloadKey.value += 1
+  reloadKey.value += 1
 }
 
 function resetTransforms() {

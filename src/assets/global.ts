@@ -280,6 +280,8 @@ export function createLinePath(start: { x: number, y: number }, end: { x: number
 export const teamList = ref<Team[]>([])
 export const matchList = ref<Match[]>([])
 
+export const dashedLinesList = ref<Record<string, Line[]>>({})
+
 export const reloadKey = ref<number>(0)
 
 export const fitCanvas = ref<boolean>(false)

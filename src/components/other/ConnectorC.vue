@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import type { Match, Line } from '@/assets/types'
-import { createLinePath, getMatchIndexById, matchList } from '@/assets/global';
-import { computed, onMounted, ref, watch } from 'vue'
+import { createLinePath, dashedLinesList, getMatchIndexById, matchList } from '@/assets/global';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 const props = defineProps<{
   match: Match,
-  showLoser: boolean,
-  transformStyle: any
+  showLoser: boolean
 }>()
 
 const sourceMatch1 = computed(() => props.match.team1.source.type === "match" ? matchList.value[getMatchIndexById(props.match.team1.source.matchId)]! : null)
@@ -81,17 +80,21 @@ function updateCoordinates() {
       vertical = true
     }
 
-    if (dashed && props.showLoser) {
-      lines.value = lines.value.concat(createLinePath({ x: cXS, y: cYS }, { x: cXT, y: cYT }, vertical, false, "var(--color-background)", width))
+    if (dashed && props.showLoser)
       lines.value = lines.value.concat(createLinePath({ x: cXS, y: cYS }, { x: cXT, y: cYT }, vertical, dashed, color, width))
-    }
-    else if (!dashed) {
-      lines.value = lines.value.concat(createLinePath({ x: cXS, y: cYS }, { x: cXT, y: cYT }, vertical, dashed, color, width))
-    }
+    else if (!dashed)
+      lines.value = createLinePath({ x: cXS, y: cYS }, { x: cXT, y: cYT }, vertical, dashed, color, width).concat(lines.value)
   })
+
+  dashedLinesList.value[props.match.id] = lines.value.filter(l => l.dashed)
 }
 
 onMounted(() => updateCoordinates())
+
+onBeforeUnmount(() => {
+  if (dashedLinesList.value[props.match.id])
+    delete dashedLinesList.value[props.match.id]
+})
 
 watch([props.match, sourceMatch1, sourceMatch2], () => {
   updateCoordinates()
@@ -103,21 +106,17 @@ watch([props.match, sourceMatch1, sourceMatch2], () => {
   v-for="(line, index) in lines"
   :key="index"
   class="connector"
-  :style="transformStyle"
   :x1="line.x1"
   :y1="line.y1"
   :x2="line.x2"
   :y2="line.y2"
   :stroke="line.color"
   :stroke-width="line.width"
-  :stroke-dasharray="line.dashed ? `${line.width} ${line.width * 2}` : ''"
+  :stroke-dasharray="line.dashed ? `${line.width} ${line.width * 2}` : undefined"
+  mask="url(#mask)"
 >
 </line>
 </template>
 
 <style scoped>
-.connector {
-  stroke-linecap: round;
-  transition: transform 0.1s ease-out;
-}
 </style>

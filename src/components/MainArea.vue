@@ -162,19 +162,17 @@ function getFitStyle() {
       @match:send="(which) => emit('send:start', { which: which, match: match })"
       @match:click="emit('send:finish', match)"
     />
+
+    <svg class="connectors">
+      <ConnectorC
+        v-for="(match, index) in matchList"
+        :key="index"
+        :match="match"
+        :showLoser="showLoser"
+      />
+    </svg>
   </div>
-  <svg
-    class="connectors"
-    :key="reloadKey + (showLoser ? 1 : 0)"
-  >
-    <ConnectorC
-      v-for="(match, index) in matchList"
-      :key="index"
-      :match="match"
-      :transformStyle="transformStyle"
-      :showLoser="showLoser"
-    />
-  </svg>
+
 </div>
 <CanvasMenuC
   v-model:offsetX="offsetX"
