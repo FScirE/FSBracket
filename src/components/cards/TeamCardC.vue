@@ -14,6 +14,8 @@ const emit = defineEmits<{
   (e: 'update:score', value: number): void
 }>()
 
+const teamImageLoaded = ref(false)
+
 const input = ref<number>(props.score ?? 0)
 
 function handleInput() {
@@ -41,7 +43,18 @@ watch(props, () => {
 <template>
 <div class="team-card" :class="{ 'team-card-placeholder' : team === null }">
   <div class="team-image">
-    <img :src="team.imageUrl" :alt="team.name" v-if="team" decoding="async"></img>
+    <img
+      :src="team.imageUrl"
+      :alt="team.name"
+      v-if="team"
+      v-show="teamImageLoaded"
+      decoding="async"
+      @load="teamImageLoaded = true"
+      @error="teamImageLoaded = false"
+      :class="{ 'visually-hidden' : !teamImageLoaded }"
+    >
+    </img>
+    <i v-if="team" v-show="!teamImageLoaded" class="fs-4 pi pi-image team-image-replacement"></i>
   </div>
   <div class="team-name ps-2" :class="{'team-source' : sourceType === 'team'}">
     <h5 v-if="team">{{ team.name }}</h5>
@@ -77,6 +90,9 @@ watch(props, () => {
 }
 
 .team-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 100%;
   aspect-ratio: 1;
   overflow: hidden;
@@ -89,6 +105,9 @@ watch(props, () => {
   object-fit: cover;
   display: block;
   overflow: hidden;
+}
+.team-image-replacement {
+  opacity: 0.4;
 }
 
 .team-name {
