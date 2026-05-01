@@ -3,9 +3,10 @@ import Sidebar from '@/components/Sidebar.vue';
 import Topbar from '@/components/Topbar.vue';
 import MainArea from '@/components/MainArea.vue'
 import { computed, onMounted, ref, watch } from 'vue';
-import { trySetSourceTeam, windowWidth } from '@/assets/global';
+import { exportingCanvas, trySetSourceTeam, windowWidth } from '@/assets/global';
 import { teamList, matchList, trySetSourceMatch } from '@/assets/global';
 import type { Match, Team } from '@/assets/types'
+import ExportingOverlay from './components/ExportingOverlay.vue';
 
 const timeoutId = ref<number | undefined>()
 const saveStatus = computed(() => timeoutId.value ? "Saving..." : "Changes saved" )
@@ -134,6 +135,7 @@ watch(sendingType, () => {
       @send:start="(value) => startSendMatch(value.which, value.match)"
       @send:finish="finishSend"
     />
+    <ExportingOverlay v-if="exportingCanvas"/>
   </main>
 </div>
 </template>

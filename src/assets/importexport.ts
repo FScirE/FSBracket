@@ -46,6 +46,7 @@ export async function downloadAsImage(quality: number) {
 
   await nextTick()
 
+  const startTime = performance.now()
   try {
     const dataUrl = await htmlToImage.toPng(node!, {
       backgroundColor: "transparent",
@@ -61,17 +62,28 @@ export async function downloadAsImage(quality: number) {
   catch {
     console.log('Image export failed')
   }
+  const timeTaken = performance.now() - startTime
 
   // Restore width+height
   node.style.maxWidth = rememberWidth
   node.style.maxHeight = rememberHeight
-  exportingCanvas.value = false
   // Restore background color
   node.style.backgroundColor = rememberBackgroundcolor
   // Restore inputs
   replacements.forEach(({ input, span }) => {
     span.parentNode!.replaceChild(input, span)
   })
+
+  // Export takes minimum of 1 second
+  const waitTime = 1000 - timeTaken
+  if (waitTime > 0)
+  await new Promise(f => setTimeout(f, waitTime))
+
+  exportingCanvas.value = false
+
+  await nextTick()
+  await new Promise(requestAnimationFrame)
+
   // Reenable transition
   node.classList.remove("no-transition")
 }
