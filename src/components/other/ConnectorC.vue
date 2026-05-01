@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Match, Line } from '@/assets/types'
-import { createLinePath, dashedLinesList, getMatchIndexById, matchList } from '@/assets/global';
+import { createLinePath, dashedLinesList, exportingCanvas, getMatchIndexById, matchList } from '@/assets/global';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 const props = defineProps<{
@@ -80,8 +80,11 @@ function updateCoordinates() {
       vertical = true
     }
 
-    if (dashed && props.showLoser)
+    if (dashed && props.showLoser) {
+      if (!exportingCanvas.value)
+        lines.value = lines.value.concat(createLinePath({ x: cXS, y: cYS }, { x: cXT, y: cYT }, vertical, false, "var(--color-background)", width))
       lines.value = lines.value.concat(createLinePath({ x: cXS, y: cYS }, { x: cXT, y: cYT }, vertical, dashed, color, width))
+    }
     else if (!dashed)
       lines.value = createLinePath({ x: cXS, y: cYS }, { x: cXT, y: cYT }, vertical, dashed, color, width).concat(lines.value)
   })
@@ -113,7 +116,7 @@ watch([props.match, sourceMatch1, sourceMatch2], () => {
   :stroke="line.color"
   :stroke-width="line.width"
   :stroke-dasharray="line.dashed ? `${line.width} ${line.width * 2}` : undefined"
-  mask="url(#mask)"
+  :mask="!line.dashed ? `url('#mask')` : undefined"
 >
 </line>
 </template>

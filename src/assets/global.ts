@@ -284,7 +284,7 @@ export const dashedLinesList = ref<Record<string, Line[]>>({})
 
 export const reloadKey = ref<number>(0)
 
-export const fitCanvas = ref<boolean>(false)
+export const exportingCanvas = ref<boolean>(false)
 
 // Placeholder values below
 

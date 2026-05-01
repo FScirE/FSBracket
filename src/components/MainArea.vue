@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { fitCanvas, matchList, reloadKey, ZOOM_SENS } from '@/assets/global'
+import { exportingCanvas, matchList, reloadKey, ZOOM_SENS } from '@/assets/global'
 import type { Match } from "@/assets/types"
 import MatchCardC from '@/components/cards/MatchCardC.vue'
 import MatchModalC from '@/components/modals/MatchModalC.vue'
 import { Modal } from 'bootstrap'
 import ConnectorC from '@/components/other/ConnectorC.vue'
 import CanvasMenuC from '@/components/other/CanvasMenuC.vue'
+import MaskC from '@/components/other/MaskC.vue'
 
 defineProps<{
   sending: boolean
@@ -28,7 +29,7 @@ const scale = ref<number>(1)
 const selectedMatchId = ref<string>("")
 
 const transformStyle = computed(() => {
-  if (!fitCanvas.value)
+  if (!exportingCanvas.value)
     return ({ transform: `translate(${offsetX.value}px, ${offsetY.value}px) scale(${scale.value})` })
   else
     return (getFitStyle())
@@ -169,6 +170,11 @@ function getFitStyle() {
         :key="index"
         :match="match"
         :showLoser="showLoser"
+      />
+
+      <MaskC
+        v-if="exportingCanvas"
+        :scale="scale"
       />
     </svg>
   </div>

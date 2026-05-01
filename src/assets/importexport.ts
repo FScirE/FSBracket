@@ -1,4 +1,4 @@
-import { fitCanvas, matchList, reloadKey, teamList } from "./global"
+import { exportingCanvas, matchList, reloadKey, teamList } from "./global"
 import * as htmlToImage from 'html-to-image'
 import { Modal } from 'bootstrap'
 import { nextTick } from "vue"
@@ -16,7 +16,7 @@ export async function downloadAsImage(quality: number) {
   const inputs = node.querySelectorAll(".team-score input") as NodeListOf<HTMLInputElement>
   const replacements: { input: HTMLInputElement, span: HTMLSpanElement }[] = []
 
-  fitCanvas.value = true
+  exportingCanvas.value = true
   // Set background color to transparent and remove transitions
   node.style.backgroundColor = "transparent"
   node.classList.add("no-transition")
@@ -65,7 +65,7 @@ export async function downloadAsImage(quality: number) {
   // Restore width+height
   node.style.maxWidth = rememberWidth
   node.style.maxHeight = rememberHeight
-  fitCanvas.value = false
+  exportingCanvas.value = false
   // Restore background color
   node.style.backgroundColor = rememberBackgroundcolor
   // Restore inputs
