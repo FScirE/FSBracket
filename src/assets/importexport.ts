@@ -4,6 +4,7 @@ import { Modal } from 'bootstrap'
 import { nextTick } from "vue"
 
 const BASELINE_CARD_HEIGHT = 100
+const FILE_SIZE_LIMIT = 10 * 1024 * 1024
 
 export async function downloadAsImage(quality: number) {
   var node = document.getElementById("mainarea")
@@ -113,10 +114,30 @@ export async function importFromFile() {
 
   fileInput.addEventListener("change", async () => {
     if (fileInput.files?.length == 1) {
-      const content = await fileInput.files[0]?.text()
+      const file = fileInput.files[0]
+      if (!file)
+        return
+
+      if (file.size > FILE_SIZE_LIMIT) {
+        console.error("Imported file too large")
+        return
+      }
+
+      if (file.name.split('.').reverse()[0] != "fsb") {
+        console.error("Imported file is of wrong type")
+        return
+      }
+
+      const content = await file.text()
       if (!content)
         return
       const json = JSON.parse(content)
+
+      if (!['["teams","matches"]', '["matches","teams"]'].includes(JSON.stringify(Object.keys(json)))) {
+        console.log(typeof json.teams)
+        console.error("Imported file is incorrectly formatted")
+        return
+      }
 
       teamList.value = json.teams
       matchList.value = json.matches
